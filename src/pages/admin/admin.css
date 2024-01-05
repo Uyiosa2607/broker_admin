@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.users-container {
+    display: flex;
+    justify-content: flex-start;
+    width: 100vw;
+    padding: 2rem;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.user-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+    background: #3131;
+}
+
+.container-fluid {
+    margin-top: 4rem;
+}
+
+.control-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    background: teal;
+    color: #fff;
+}
+
+.control-panel-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    background: rgba(4, 1, 4, 0.067);
+    font-weight: bold;
+    align-items: center;
+    padding-top: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    display: block;
+}
+
+input {
+    padding: .5rem;
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+}
+
+.confirm-btn {
+    border: none;
+    width: 30%;
+}
+
+.confirm-btn:last-of-type {
+    margin-bottom: 2rem;
+}
+
+nav {
+    text-align: center;
+    justify-content: center;
+}
