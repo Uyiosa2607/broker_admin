@@ -35,8 +35,8 @@ export default function Admin() {
 
     async function signOut() {
         const { error } = await supabase.auth.signOut()
+        localStorage.removeItem("auth")
         navigate("/")
-
     }
 
     async function updateBalance(e){
@@ -205,7 +205,7 @@ export default function Admin() {
                                             <tr key={transaction.id} role="row" className="odd">
                                                 <td className="sorting_1">${transaction.value}</td>
                                                 <td>
-                                                    <span onClick={updateStatus} data-id={transaction.id} className="badge badge-danger">{transaction.status}</span>
+                                                    <span onClick={updateStatus} data-id={transaction.id} className={transaction.status === "complete" ? "badge badge-success" : "badge badge-danger"}>{transaction.status}</span>
                                                 </td>
                                             </tr>
                                         ))}

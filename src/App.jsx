@@ -1,13 +1,18 @@
 import supabase from "./utils/client"
 import { useNavigate } from "react-router-dom"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function App() {
 
+  const navigate = useNavigate()
+
+  useEffect(()=> {
+    const auth = localStorage.getItem("auth");
+    if(auth) return navigate("/admin")
+  },[])
+
   const [password, setPassword] = useState("")
   const [ email, setEmail ] = useState("")
-
-  const navigate = useNavigate()
 
   async function Login(e) {
     e.preventDefault()
@@ -16,6 +21,7 @@ export default function App() {
       password: password,
     })
     if (error) return alert("Invalid Credentials")
+    localStorage.setItem("auth", "authenticated")
     navigate("/admin")
   }
   return (
