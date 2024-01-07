@@ -2,6 +2,8 @@ import "./admin.css"
 import supabase from "../../utils/client"
 import {  useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Admin() {
 
@@ -48,7 +50,7 @@ export default function Admin() {
                 .eq('id', id )
                 if(error) return console.log(error.message)
                 getUsers()
-                alert("balance updated")
+                toast.success("balance updated")
         } catch (error) {
             console.log(error)
         }
@@ -63,7 +65,7 @@ export default function Admin() {
                 .eq('id', id)
             if (error) return console.log(error.message)
             getUsers()
-            alert("Bonus updated")
+            toast.success("Bonus updated")
         } catch (error) {
             console.log(error)
         }
@@ -80,7 +82,7 @@ export default function Admin() {
                 .eq('id', id)
             if (error) return console.log(error.message)
             getUsers()
-            alert("Transaction status updated")
+            toast.success("Transaction status updated")
         } catch (error) {
             console.log(error)
         }
@@ -127,6 +129,8 @@ export default function Admin() {
 
 
             <div className="users-container">
+
+                <ToastContainer />
 
                 <div className="wrapper">
                     {users.map((user)=> (
