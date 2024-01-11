@@ -163,50 +163,23 @@ export default function Admin() {
                         
                         <div className="row">
                             <div className="col-sm-12">
-                                <table
-                                    id="UserTable"
-                                    className="UserTable table table-hover text- dataTable no-footer"
-                                    role="grid"
-                                    aria-describedby="UserTable_info"
-                                >   
+                               
+                                <table className="table table-striped">
                                     <thead>
-                                        <tr role="row">
-                                            <th
-                                                className="sorting_desc"
-                                                tabIndex={0}
-                                                aria-controls="UserTable"
-                                                rowSpan={1}
-                                                colSpan={1}
-                                                aria-sort="descending"
-                                                aria-label="Amount: activate to sort column ascending"
-                                                style={{ width: "182.962px" }}
-                                            >
-                                                Amount
-                                            </th>
-
-                                            <th
-                                                className="sorting"
-                                                tabIndex={0}
-                                                aria-controls="UserTable"
-                                                rowSpan={1}
-                                                colSpan={1}
-                                                aria-label="Status: activate to sort column ascending"
-                                                style={{ width: "195.95px" }}
-                                            >
-                                                Status
-                                            </th>
-
+                                        <tr>
+                                            <th scope="col">Amount</th>
+                                            <th scope="col">Status</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        {transactions && transactions.map((transaction) => (
-                                            <tr key={transaction.id} role="row" className="odd">
-                                                <td className="sorting_1">${transaction.value}</td>
-                                                <td>
-                                                    <span onClick={updateStatus} data-id={transaction.id} className={transaction.status === "complete" ? "badge badge-success" : "badge badge-danger"}>{transaction.status}</span>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                    <tbody className="table-striped">
+                                        {
+                                          transactions &&  transactions.map((transaction)=> (
+                                              <tr key={transaction.id} className="table table-striped">
+                                                  <td>${transaction.value}</td>
+                                                  <td><span onClick={updateStatus} data-id={transaction.id} className={transaction.status === "complete" ? "badge badge-success" : "badge badge-danger"}>{transaction.status}</span></td>
+                                              </tr>
+                                          ))
+                                        }
                                     </tbody>
                                 </table>
 
@@ -215,7 +188,7 @@ export default function Admin() {
                         </div>
                     </div>
 
-                    <button onClick={() => setEdit(false)} className="btn btn-primary">done</button>
+                    <button onClick={() => setEdit(false)} className="btn mb-4 btn-primary">done</button>
                     
                 </form>
 

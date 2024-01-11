@@ -36,9 +36,7 @@ body {
     left: 0;
     width: 100%;
     z-index: 100;
-    /* background: teal; */
-    /* color: #fff; */
-    height: 100vh;
+    min-height: 100vh;
 }
 
 
