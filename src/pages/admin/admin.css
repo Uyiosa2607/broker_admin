@@ -4,12 +4,12 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
-.users-container {
+/* .users-container {
     display: flex;
     justify-content: flex-start;
     width: 100vw;
     padding: 2rem;
-}
+} */
 
 .wrapper {
     display: flex;
@@ -36,14 +36,15 @@ body {
     left: 0;
     width: 100%;
     z-index: 100;
-    background: teal;
-    color: #fff;
+    /* background: teal; */
+    /* color: #fff; */
 }
+
 
 .control-panel-form {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
     background: rgba(4, 1, 4, 0.067);
     font-weight: bold;
     align-items: center;
@@ -78,4 +79,13 @@ input {
 nav {
     text-align: center;
     justify-content: center;
+}
+
+.custom-list-item {
+    gap: 1rem;
+    margin: .4rem 0;
+}
+
+.hide-display {
+    display: none;
 }

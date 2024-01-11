@@ -49,23 +49,16 @@ export default function Admin() {
                 .update({ balance: balance })
                 .eq('id', id )
                 if(error) return console.log(error.message)
-                getUsers()
-                toast.success("balance updated")
         } catch (error) {
             console.log(error)
         }
-    }
-
-    async function updateBonus(e) {
-        e.preventDefault()
         try {
             const { error } = await supabase
                 .from('users')
                 .update({ bonus: bonus })
                 .eq('id', id)
             if (error) return console.log(error.message)
-            getUsers()
-            toast.success("Bonus updated")
+            toast.success("balance updated")
         } catch (error) {
             console.log(error)
         }
@@ -125,25 +118,27 @@ export default function Admin() {
 
     return (
         <div className="container-fluid">
-            <p style={{textAlign:"center", fontWeight: "bold", padding: "1rem"}}>All users</p>
-
-
-            <div className="users-container">
-
-                <ToastContainer />
-
-                <div className="wrapper">
-                    {users.map((user)=> (
-                        <div key={user.id} className="user-details">
-                            <span><i className="fa-solid fa-circle-user fa-2x"></i></span>
-                            <span className="user-name">{user.full_name}</span>
-                            <span className="user-name">${user.balance}</span>
-                            <button data-id={user.id} onClick={fecthUser} className="btn-success user-btn">Edit</button>
-                        </div> 
-                    ))}
-                </div>
+            <ToastContainer />
+            <div className={edit == true ? "users-container hide-display" : ""}>
+                <p style={{textAlign:"center", fontWeight: "bold", padding: "1rem"}}>All users</p>
+                <div className={edit == true ? "users-container hide-display" : "users-container"}>
+                    <ul className="list-group custom-list-group">
+                       {users.map((user)=> (
+                           <li key={user.id} className="list-group-item list-group-item-secondary d-flex custom-list-item justify-content-between align-items-center">
+                               <span><i className="fa-solid fa-circle-user fa-2x"></i></span>
+                               <span className="badge badge-primary pill-rounded">{user.full_name}</span>
+                               <span className="badge badge-primary pill-rounded">${user.balance}</span>
+                               <button data-id={user.id} onClick={fecthUser} className="btn-success user-btn">Edit</button>
+                           </li>
+                       ))}
+                    </ul>
             </div>
-           { edit ? ( <div className="control-panel">
+
+                <nav>
+                    <button onClick={signOut} style={{ textAlign: "center" }} className="btn btn-danger">logout</button>
+                </nav>
+            </div>
+            {edit ? (<div className="control-panel bg-secondary text-light">
 
                 <form className="control-panel-form">
 
@@ -151,7 +146,7 @@ export default function Admin() {
                     
                     <span>{user.full_name}</span>
 
-                    <i>{user.email}</i>
+                    <i className="badge badge-primary pill-rounded">{user.email}</i>
 
                     <div className="form-group">
                         <label htmlFor="">Balance</label>
@@ -160,16 +155,15 @@ export default function Admin() {
                         <input onChange={(e) => setBonus(e.target.value)} value={bonus} type="text" />
                     </div>
 
-                    <button onClick={updateBalance} className="btn-success confirm-btn">update balance</button>
-                    <button onClick={updateBonus} className="btn-success confirm-btn">update bonus</button>
-
+                    <button onClick={updateBalance} className="btn btn-success">update</button>
+            
                     <h4>TRANSACTIONS</h4>
                     
-                    <div style={{ background: "#fff", color: "#212121" }} className="transaction-list">
+                    <div style={{color: "#212121" }} className="transaction-list">
                         
                         <div className="row">
                             <div className="col-sm-12">
-                                <table style={{ height: "100%" }}
+                                <table
                                     id="UserTable"
                                     className="UserTable table table-hover text- dataTable no-footer"
                                     role="grid"
@@ -221,15 +215,12 @@ export default function Admin() {
                         </div>
                     </div>
 
-                    <button onClick={() => setEdit(false)} className="btn-success confirm-btn">done</button>
+                    <button onClick={() => setEdit(false)} className="btn btn-primary">done</button>
                     
                 </form>
 
             </div>) : null}
 
-            <nav>
-                <button onClick={signOut} style={{ textAlign: "center" }} className="btn btn-danger">logout</button>
-            </nav>
         </div>
     )
 }
