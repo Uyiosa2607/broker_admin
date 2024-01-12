@@ -85,8 +85,6 @@ export default function Admin() {
 
         const id = e.target.getAttribute("data-id")
 
-        console.log(id)
-
         setId(id)
 
         try {
