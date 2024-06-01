@@ -27,7 +27,6 @@ export async function POST(request: any) {
 
     return new Response("Something went wrong");
   } catch (error: any) {
-    console.log(error);
     if (error.code === "P2002") {
       return new Response("Email already exist");
     }

@@ -22,6 +22,8 @@ export default function Login() {
         redirect: false,
       });
 
+      console.log(getAccess)
+
       if (getAccess.error) {
         setBadSignIn(true);
         return;

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Container } from "@mui/material";
+import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,14 +12,15 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  children, session,
+}: any
+ ) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Container maxWidth="sm">{children}</Container>
+        <SessionProvider session={session}>
+          <Container maxWidth="sm">{children}</Container>
+        </SessionProvider>
       </body>
     </html>
   );

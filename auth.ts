@@ -12,22 +12,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email: {},
         password: {},
       },
-      authorize: async (credentials,req) => {
-        let user = null;
+      authorize: async (credentials) => {
+        let user: any = null;
 
-        const submitedEmail: any = credentials.email;
-
-        const submitedPassword: any = credentials.password;
+        const { email, password } = credentials as {
+          email: string;
+          password: string;
+        };
 
         const account = await prisma.users.findUnique({
           where: {
-            email: submitedEmail,
+            email: email,
           },
         });
 
         if (account) {
           const login: boolean = await bcrypt.compare(
-            submitedPassword,
+            password,
             account.password
           );
           if (login) {
@@ -35,16 +36,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             user = userData;
             return user;
           } else {
-            throw new Error("Invalid Credentials")
+            throw new Error("Invalid Credentials");
           }
         } else {
-           throw new Error("User not found")
+          throw new Error("User not found");
         }
       },
     }),
   ],
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }: any) {
+      if (token) {
+        session.user.id = token.id;
+      }
+      return session;
+    },
+  },
   pages: {
     signIn: "/login",
-    error: "/auth/error"
+    error: "/auth/error",
   },
 });
