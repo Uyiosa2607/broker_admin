@@ -2,6 +2,7 @@ import { prisma } from "@/auth";
 import bcrypt from "bcryptjs";
 
 export async function POST(request: any) {
+
   const req = await request.json();
 
   const hashedPassword = bcrypt.hashSync(req.password, 10);
@@ -18,7 +19,7 @@ export async function POST(request: any) {
         email: true,
         id: true,
         name: true,
-        gender: true,
+        admin: true,
         profile_image: true,
       },
     });

@@ -64,7 +64,7 @@ export default function Dashboard() {
           </h2>
           <p className="text-gray-500">
             {loading ? (
-              <Skeleton width="140px" animation="wave" />
+              <Skeleton width="165px" animation="wave" />
             ) : (
               userData.email
             )}
@@ -72,9 +72,7 @@ export default function Dashboard() {
           <span className="text-gray-500 text-transform: capitalize">
             {loading ? (
               <Skeleton width="140px" animation="wave" />
-            ) : (
-              userData.gender
-            )}
+            ) : userData.admin? "Admin" : "User"}
           </span>
         </div>
         <div className="p-4 border-t mx-8 mt-2">

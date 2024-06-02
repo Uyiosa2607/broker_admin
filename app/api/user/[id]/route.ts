@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 import { prisma } from "@/auth";
 
 export async function GET(request: any, { params }: any) {
-  const id: number = Number(params.id);
+  const id: any = params.id;
 
   try {
     const user = await prisma.users.findUnique({
@@ -13,7 +13,7 @@ export async function GET(request: any, { params }: any) {
         name: true,
         email: true,
         profile_image: true,
-        gender: true,
+        admin: true,
         id: true
       },
     });

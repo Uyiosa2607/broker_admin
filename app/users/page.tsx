@@ -1,4 +1,48 @@
+/* eslint-disable @next/next/no-img-element */
+"use client";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Skeleton } from "@mui/material";
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  admin: string;
+}
+
 export default function Users() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function getUsers() {
+      try {
+        const request = await axios.get("/api/users");
+        const response: User[] = await request.data;
+        console.log(response);
+        setUsers(response);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setError("Failed to load user data.");
+        setLoading(false);
+      }
+    }
+    getUsers();
+  }, []);
+
+  const handleEdit = (id: number) => {
+    console.log("Edit user with ID:", id);
+    // Implement edit functionality
+  };
+
+  const handleDelete = (id: number) => {
+    console.log("Delete user with ID:", id);
+    // Implement delete functionality
+  };
+
   return (
     <>
       <div className="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
@@ -10,187 +54,89 @@ export default function Users() {
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <div className="ml-10 space-x-8 lg:ml-40">
-              {/* <button className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="h-4 w-4">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75" />
-          </svg>
-
-          CSV
-        </button> */}
-            </div>
+            <div className="ml-10 space-x-8 lg:ml-40"></div>
           </div>
         </div>
         <div className="overflow-y-hidden rounded-lg border">
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-blue-600 text-left text-xs font-semibold uppercase tracking-widest text-white">
-                  <th className="px-5 py-3">ID</th>
-                  <th className="px-5 py-3">Full Name</th>
-                  <th className="px-5 py-3">User Role</th>
-                  <th className="px-5 py-3">Created at</th>
-                  <th className="px-5 py-3">Status</th>
-                </tr>
-              </thead>
-              <tbody className="text-gray-500">
-                <tr>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">3</p>
-                  </td>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="/images/-ytzjgg6lxK1ICPcNfXho.png"
-                          alt=""
-                        />
-                      </div>
-                      <div className="ml-3">
-                        <p className="whitespace-no-wrap">Besique Monroe</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">Administrator</p>
-                  </td>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">Sep 28, 2022</p>
-                  </td>
-
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <span className="rounded-full bg-green-200 px-3 py-1 text-xs font-semibold text-green-900">
-                      Active
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">7</p>
-                  </td>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="/images/ddHJYlQqOzyOKm4CSCY8o.png"
-                          alt=""
-                        />
-                      </div>
-                      <div className="ml-3">
-                        <p className="whitespace-no-wrap">James Cavier</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">Author</p>
-                  </td>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">Sep 28, 2022</p>
-                  </td>
-
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <span className="rounded-full bg-green-200 px-3 py-1 text-xs font-semibold text-green-900">
-                      Active
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">12</p>
-                  </td>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="/images/oPf2b7fqx5xa3mo68dYHo.png"
-                          alt=""
-                        />
-                      </div>
-                      <div className="ml-3">
-                        <p className="whitespace-no-wrap">Elvis Son</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">Editor</p>
-                  </td>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">Sep 28, 2022</p>
-                  </td>
-
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <span className="rounded-full bg-yellow-200 px-3 py-1 text-xs font-semibold text-yellow-900">
-                      Suspended
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">66</p>
-                  </td>
-                  <td className="bg-white px-5 py-5 text-sm">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="/images/fR71TFZIDTv2jhvKsOMhC.png"
-                          alt=""
-                        />
-                      </div>
-                      <div className="ml-3">
-                        <p className="whitespace-no-wrap">Dana White</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">Administrator</p>
-                  </td>
-                  <td className="bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">Sep 28, 2022</p>
-                  </td>
-
-                  <td className="bg-white px-5 py-5 text-sm">
-                    <span className="rounded-full bg-red-200 px-3 py-1 text-xs font-semibold text-red-900">
-                      Inactive
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">12</p>
-                  </td>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0">
-                        <img
-                          className="h-full w-full rounded-full"
-                          src="/images/oPf2b7fqx5xa3mo68dYHo.png"
-                          alt=""
-                        />
-                      </div>
-                      <div className="ml-3">
-                        <p className="whitespace-no-wrap">Elvis Son</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">Editor</p>
-                  </td>
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <p className="whitespace-no-wrap">Sep 28, 2022</p>
-                  </td>
-
-                  <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                    <span className="rounded-full bg-yellow-200 px-3 py-1 text-xs font-semibold text-yellow-900">
-                      Suspended
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            {error ? (
+              <div className="text-red-500 p-4">{error}</div>
+            ) : (
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-blue-600 text-left text-xs font-semibold uppercase tracking-widest text-white">
+                    <th className="px-5 py-3">Image</th>
+                    <th className="px-5 py-3">Full Name</th>
+                    <th className="px-5 py-3">Email</th>
+                    <th className="px-5 py-3">Role</th>
+                    <th className="px-5 py-3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-500">
+                  {loading ? (
+                    Array.from(new Array(5)).map((_, index) => (
+                      <tr key={index}>
+                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                          <Skeleton key={`skeleton-avatar-${index}`} variant="circular" width={40} height={40} />
+                        </td>
+                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                          <Skeleton key={`skeleton-id-${index}`} variant="text" animation="wave" width={20} />
+                        </td>
+                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                          <Skeleton key={`skeleton-name-${index}`} variant="text" animation="wave" width={100} />
+                        </td>
+                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                          <Skeleton key={`skeleton-email-${index}`} variant="text" animation="wave" width={150} />
+                        </td>
+                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                          <Skeleton key={`skeleton-gender-${index}`} variant="text" animation="wave" width={50} />
+                        </td>
+                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                          <Skeleton key={`skeleton-actions-${index}`} variant="text" animation="wave" width={50} />
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                   users && users.map((user) => (
+                      <tr key={user.id}>
+                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                          <div className="h-10 w-10 flex-shrink-0">
+                            <img
+                              className="h-full w-full object-cover rounded-full"
+                              src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ"
+                              alt={`${user.name}'s Avatar`}
+                            />
+                          </div>
+                        </td>
+                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                          <p className="whitespace-no-wrap">{user.name}</p>
+                        </td>
+                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                          <p className="whitespace-no-wrap">{user.email}</p>
+                        </td>
+                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                          <p className="whitespace-no-wrap">{user.admin? "Admin" : "User"}</p>
+                        </td>
+                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm flex space-x-2">
+                          {/* <button 
+                            className="rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-700"
+                            onClick={() => handleEdit(user.id)}
+                          >
+                            Edit
+                          </button> */}
+                          <button 
+                            className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-700"
+                            onClick={() => handleDelete(user.id)}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       </div>
