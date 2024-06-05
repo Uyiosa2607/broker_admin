@@ -1,7 +1,6 @@
 import { prisma } from "@/auth";
 
 export async function DELETE(request: any, { params }: any) {
-
   const { dataId } = await request.json();
 
   const userId = params.id;
@@ -21,14 +20,18 @@ export async function DELETE(request: any, { params }: any) {
           },
         });
 
-        if (removedUser) return Response.json({ success: "Account deleted!!" });
+        if (removedUser)
+          return Response.json({ success: "Account deleted!!", status: 200 });
       } catch (error) {
         console.log(error);
       }
     } else {
-      return Response.json({ error: "Only Admins are allowed to delete other users" });
+      return Response.json({
+        error: "Only Admins are allowed to delete other users",
+        status: 500,
+      });
     }
   }
 
-  return Response.json({ error: "something went wrong" });
+  return Response.json({ error: "something went wrong", status: 500 });
 }

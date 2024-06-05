@@ -17,6 +17,6 @@ export async function GET(request: any) {
     if (users) return Response.json(users);
   } catch (error) {
     console.log(error);
-    return Response.json({ message: "Something went wrong!"});
+    return Response.json({ message: "Something went wrong!", status: 500});
   }
 }
