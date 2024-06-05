@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import styles from "./page.module.scss";
 import { useSession } from "next-auth/react";
 import { Skeleton } from "@mui/material";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { handleLogout } from "../utils/utils";
 
 export default function Dashboard() {
   const [userData, setUserData] = useState<any>([]);
@@ -15,7 +15,7 @@ export default function Dashboard() {
     const getUserData = async () => {
       if (session && session.user && session.user.id) {
         try {
-          const request = await axios.get("/api/user/" + session.user.id);
+          const request = await axios.get("/api/auth/profile/" + session.user.id);
           const response = await request.data;
           setUserData(response);
           setLoading(false);
@@ -76,7 +76,7 @@ export default function Dashboard() {
           </span>
         </div>
         <div className="p-4 border-t mx-8 mt-2">
-          <button className="w-1/2 block mx-auto rounded-full bg-gray-900 hover:shadow-lg font-semibold text-white px-6 py-2">
+          <button onClick={handleLogout} className="w-1/2 block mx-auto rounded-full bg-gray-900 hover:shadow-lg font-semibold text-white px-6 py-2">
             Sign out
           </button>
         </div>
