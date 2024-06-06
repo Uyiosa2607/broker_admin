@@ -1,11 +1,13 @@
 -- CreateTable
 CREATE TABLE "Users" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "name" TEXT,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "gender" TEXT,
-    "profile_image" TEXT
+    "admin" BOOLEAN NOT NULL DEFAULT false,
+    "profile_image" TEXT,
+
+    CONSTRAINT "Users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
