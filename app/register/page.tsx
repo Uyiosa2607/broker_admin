@@ -9,9 +9,7 @@ export default function Register() {
             <h2 className="text-center text-3xl font-bold tracking-wide text-gray-800">
               Sign Up
             </h2>
-            <p className="text-center text-sm text-gray-600 mt-2">
-              Already have an account?
-            </p>{" "}
+            {" "}
           </div>
           <RegisterForm />
         </div>
