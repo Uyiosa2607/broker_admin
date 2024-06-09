@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -80,7 +81,18 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Login</Button>
+        <div className="w-full flex items-center justify-between">
+          <Button type="submit">Login</Button>
+          <Link href="/register">
+            <span
+              style={{
+                textDecoration: "underline",
+              }}
+            >
+              create an account here
+            </span>
+          </Link>
+        </div>
       </form>
     </Form>
   );

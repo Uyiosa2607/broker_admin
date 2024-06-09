@@ -3,15 +3,18 @@
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Skeleton } from "@mui/material";
+// import { Skeleton } from "@mui/material";
 import { handleLogout } from "../utils/utils";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 interface User {
   id: number;
   name: string;
   email: string;
   admin: string;
-  profile_image: string
+  profile_image: string;
 }
 
 export default function Users() {
@@ -41,14 +44,17 @@ export default function Users() {
     const dataId: any = id;
     if (session && session.user && session.user.id) {
       try {
-        const request = await axios.delete("/api/auth/delete/" + session.user.id, {
-          data: { dataId },
-        });
+        const request = await axios.delete(
+          "/api/auth/delete/" + session.user.id,
+          {
+            data: { dataId },
+          }
+        );
         const response = await request.data;
-        if(dataId === session.user.id){
-          handleLogout()
+        if (dataId === session.user.id) {
+          handleLogout();
         }
-        console.log(response)
+        console.log(response);
         if (response.error) return alert(response.error);
         if (response.success) return alert(response.success);
       } catch (error: any) {
@@ -61,11 +67,16 @@ export default function Users() {
     <>
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-8">
         <div className="flex items-center justify-between pb-6">
-          <div>
-            <h2 className="font-semibold text-gray-700">User Accounts</h2>
-            <span className="text-xs text-gray-500">
-              View accounts of registered users
-            </span>
+          <div className="flex justify-between w-full items-center">
+            <div>
+              <h2 className="font-semibold text-gray-700">User Accounts</h2>
+              <span className="text-xs text-gray-500">
+                View accounts of registered users
+              </span>
+            </div>
+            <Button asChild>
+              <Link href="/dashboard">Profile</Link>
+            </Button>
           </div>
           <div className="flex items-center justify-between">
             <div className="ml-10 space-x-8 lg:ml-40"></div>
@@ -91,44 +102,19 @@ export default function Users() {
                     ? Array.from(new Array(4)).map((_, index) => (
                         <tr key={index}>
                           <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                            <Skeleton
-                              key={`skeleton-avatar-${index}`}
-                              variant="circular"
-                              width={40}
-                              height={40}
-                            />
+                            <Skeleton className="w-[40px] h-[40px] rounded-full" />
                           </td>
                           <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                            <Skeleton
-                              key={`skeleton-id-${index}`}
-                              variant="text"
-                              animation="wave"
-                              width={20}
-                            />
+                            <Skeleton className="w-[40px] h-[16px] rounded-full" />
                           </td>
                           <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                            <Skeleton
-                              key={`skeleton-name-${index}`}
-                              variant="text"
-                              animation="wave"
-                              width={100}
-                            />
+                            <Skeleton className="w-[100px] h-[16px] rounded-full" />
                           </td>
                           <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                            <Skeleton
-                              key={`skeleton-email-${index}`}
-                              variant="text"
-                              animation="wave"
-                              width={150}
-                            />
+                            <Skeleton className="w-[150px] h-[16px] rounded-full" />
                           </td>
                           <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                            <Skeleton
-                              key={`skeleton-actions-${index}`}
-                              variant="text"
-                              animation="wave"
-                              width={50}
-                            />
+                            <Skeleton className="w-[50px] h-[16px] rounded-full" />
                           </td>
                         </tr>
                       ))
@@ -139,7 +125,10 @@ export default function Users() {
                             <div className="h-10 w-10 flex-shrink-0">
                               <img
                                 className="h-full w-full object-cover rounded-full"
-                                src={user.profile_image || "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ"}
+                                src={
+                                  user.profile_image ||
+                                  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ"
+                                }
                                 alt={`${user.name}'s Avatar`}
                               />
                             </div>
