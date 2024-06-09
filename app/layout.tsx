@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Container } from "@mui/material";
 import { SessionProvider } from "next-auth/react";
 import { Inter as FontSans } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider";
 
 import { cn } from "@/lib/utils";
 
@@ -26,18 +24,9 @@ export default function RootLayout({ children, session }: any) {
           fontSans.variable
         )}
       >
-        <SessionProvider session={session}>
-          <Container>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
-            </ThemeProvider>
-          </Container>
-        </SessionProvider>
+        <div className="container w-full mx-auto px-[20px]">
+          <SessionProvider session={session}>{children}</SessionProvider>
+        </div>
       </body>
     </html>
   );
