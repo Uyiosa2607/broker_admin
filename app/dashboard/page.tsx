@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useToast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
 
 export default function Dashboard() {
   const [userData, setUserData] = useState<any>([]);
@@ -16,6 +18,9 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState(null);
   const [userId, setUserId] = useState("");
+  const [progress, setProgress] = useState(false);
+
+  const { toast } = useToast();
 
   useEffect(() => {
     getUserData();
@@ -39,6 +44,7 @@ export default function Dashboard() {
 
   async function handleImageUpload() {
     try {
+      setProgress(true);
       const request = await axios.post("/api/auth/update-profile-image", {
         userId,
         image,
@@ -46,8 +52,11 @@ export default function Dashboard() {
       const response = await request.data;
       if (response.status === 200) {
         setImage(null);
+        setProgress(false);
         getUserData();
-        return alert(response.success);
+        return toast({
+          description: "Profile photo updated!",
+        });
       }
       console.log(response);
     } catch (error) {
@@ -57,10 +66,26 @@ export default function Dashboard() {
 
   return (
     <div className="mt-5">
-      <Card>
+      <Card className="lg:w-[600px] mx-auto">
         <CardHeader>
           <div className="w-full mb-[20px]">
-            <Button onClick={handleLogout}>logout</Button>
+            {image ? (
+              <div className="w-full flex justify-between items-center">
+                <Button variant="default" onClick={handleLogout}>
+                  logout
+                </Button>
+                <Button variant="default" onClick={handleImageUpload}>
+                  Update profile pic{" "}
+                  {progress ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : null}
+                </Button>
+              </div>
+            ) : (
+              <Button variant="default" onClick={handleLogout}>
+                logout
+              </Button>
+            )}
           </div>
         </CardHeader>
         <CardContent>
@@ -69,14 +94,17 @@ export default function Dashboard() {
               {loading ? (
                 <Skeleton className="w-[120px] h-[120px] rounded-full" />
               ) : (
-                <img
-                  alt="profile holder"
-                  src={
-                    userData.profile_image ||
-                    "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ"
-                  }
-                  className="avartar w-[120px] h-[120px] rounded-full object-cover"
-                />
+                <div className="relative">
+                  <UploadImage setImage={setImage} />
+                  <img
+                    alt="profile holder"
+                    src={
+                      userData.profile_image ||
+                      "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ"
+                    }
+                    className="avartar w-[120px] h-[120px] rounded-full object-cover"
+                  />
+                </div>
               )}
             </div>
             <div className="flex flex-col items-center justify-center gap-3">

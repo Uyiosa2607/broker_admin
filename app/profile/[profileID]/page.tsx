@@ -72,8 +72,14 @@ export default function Profile() {
 
   return (
     <div className="mt-5">
-      <Card>
-        <CardHeader />
+      <Card className="lg:w-[600px] mx-auto">
+        <CardHeader>
+          <div className="w-[50px] mb-[10px]">
+            <Button asChild>
+              <Link href="/users">All users</Link>
+            </Button>
+          </div>
+        </CardHeader>
         <CardContent>
           <div className="w-full flex flex-col gap-4 items-center justify-center">
             <div>
@@ -108,9 +114,6 @@ export default function Profile() {
               )}
             </div>
           </div>
-          <Button className="mt-[20px]" asChild>
-            <Link href="/users">All users</Link>
-          </Button>
         </CardContent>
         <CardFooter>
           {admin ? (

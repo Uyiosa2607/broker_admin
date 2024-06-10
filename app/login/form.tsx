@@ -6,12 +6,6 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import Link from "next/link";
-
-const formSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(5, { message: "Must be 5 or more characters long" }),
-});
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -23,9 +17,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
+
+const formSchema = z.object({
+  email: z.string().email({ message: "Invalid email address" }),
+  password: z.string().min(5, { message: "Must be 5 or more characters long" }),
+});
 
 export function LoginForm() {
   const router = useRouter();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,14 +41,29 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      setLoading(true);
       const request: any = await signIn("credentials", {
         email: values.email,
         password: values.password,
         redirect: false,
       });
 
-      if (request.error) return alert("invalid credentials");
-      if (request.ok) return router.push("/dashboard");
+      if (request.error) {
+        setLoading(false);
+        toast({
+          variant: "destructive",
+          title: "Invalid credentials",
+          description: "Please check your login details",
+        });
+        return;
+      }
+      if (request.ok) {
+        router.push("/dashboard");
+        setLoading(false);
+        toast({
+          description: "Login success!",
+        });
+      }
     } catch (error: any) {
       console.log(error);
     }
@@ -82,7 +101,10 @@ export function LoginForm() {
           )}
         />
         <div className="w-full flex items-center justify-between">
-          <Button type="submit">Login</Button>
+          <Button type="submit">
+            Login{" "}
+            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+          </Button>
           <Link href="/register">
             <span
               style={{
