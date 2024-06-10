@@ -42,7 +42,7 @@ export default function Users() {
     getUsers();
   }, []);
 
-  async function sendToProfile(id: string) {
+  async function sendToProfile(id: any) {
     const profileId = id;
     router.push("/profile/" + profileId);
   }
