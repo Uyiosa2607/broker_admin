@@ -28,7 +28,9 @@ export default function Dashboard() {
         const request = await axios.get("/api/auth/profile/" + session.user.id);
         const response = await request.data;
         setUserData(response);
-        setLoading(false);
+        if (request.status === 200) {
+          setLoading(false);
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -57,7 +59,7 @@ export default function Dashboard() {
     <div className="mt-5">
       <Card>
         <CardHeader>
-          <div className="w-full">
+          <div className="w-full mb-[20px]">
             <Button onClick={handleLogout}>logout</Button>
           </div>
         </CardHeader>
@@ -95,7 +97,7 @@ export default function Dashboard() {
               )}
             </div>
           </div>
-          <Button asChild>
+          <Button className="mt-[20px]" asChild>
             <Link href="/users">All users</Link>
           </Button>
         </CardContent>

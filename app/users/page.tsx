@@ -3,10 +3,10 @@
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-// import { Skeleton } from "@mui/material";
 import { handleLogout } from "../utils/utils";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface User {
@@ -24,6 +24,8 @@ export default function Users() {
 
   const { data: session, status } = useSession();
 
+  const router = useRouter();
+
   useEffect(() => {
     async function getUsers() {
       try {
@@ -40,7 +42,12 @@ export default function Users() {
     getUsers();
   }, []);
 
-  const handleDelete = async (id: number) => {
+  async function sendToProfile(id: string) {
+    const profileId = id;
+    router.push("/profile/" + profileId);
+  }
+
+  const handleDelete = async (id: any) => {
     const dataId: any = id;
     if (session && session.user && session.user.id) {
       try {
@@ -71,15 +78,14 @@ export default function Users() {
             <div>
               <h2 className="font-semibold text-gray-700">User Accounts</h2>
               <span className="text-xs text-gray-500">
-                View accounts of registered users
+                View accounts of all users
               </span>
             </div>
             <Button asChild>
-              <Link href="/dashboard">Profile</Link>
+              <Link className="mr-2" href="/dashboard">
+                Dashboard
+              </Link>
             </Button>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="ml-10 space-x-8 lg:ml-40"></div>
           </div>
         </div>
         <div className="overflow-y-hidden rounded-lg border">
@@ -122,7 +128,10 @@ export default function Users() {
                       users.map((user) => (
                         <tr key={user.id}>
                           <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                            <div className="h-10 w-10 flex-shrink-0">
+                            <div
+                              onClick={() => sendToProfile(user.id)}
+                              className="h-10 w-10 flex-shrink-0"
+                            >
                               <img
                                 className="h-full w-full object-cover rounded-full"
                                 src={
