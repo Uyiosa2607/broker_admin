@@ -69,7 +69,7 @@ export default function Users() {
           setWaiting(false);
           toast({
             variant: "destructive",
-            title: "Invalid credentials",
+            title: "Unauthorized action",
             description: response.error,
           });
           return;
