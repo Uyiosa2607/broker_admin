@@ -7,6 +7,7 @@ import { handleLogout } from "../utils/utils";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 
 interface User {
@@ -21,24 +22,26 @@ export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [waiting, setWaiting] = useState(false);
 
   const { data: session, status } = useSession();
+  const { toast } = useToast();
 
   const router = useRouter();
 
-  useEffect(() => {
-    async function getUsers() {
-      try {
-        const request = await axios.get("/api/auth/users");
-        const response: User[] = await request.data;
-        setUsers(response);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        setError("Failed to load user data.");
-        setLoading(false);
-      }
+  async function getUsers() {
+    try {
+      const request = await axios.get("/api/auth/users");
+      const response: User[] = await request.data;
+      setUsers(response);
+      setLoading(false);
+    } catch (error) {
+      setError("Failed to load user data.");
+      setLoading(false);
     }
+  }
+
+  useEffect(() => {
     getUsers();
   }, []);
 
@@ -51,6 +54,7 @@ export default function Users() {
     const dataId: any = id;
     if (session && session.user && session.user.id) {
       try {
+        setWaiting(true);
         const request = await axios.delete(
           "/api/auth/delete/" + session.user.id,
           {
@@ -61,9 +65,23 @@ export default function Users() {
         if (dataId === session.user.id) {
           handleLogout();
         }
-        console.log(response);
-        if (response.error) return alert(response.error);
-        if (response.success) return alert(response.success);
+        if (response.error) {
+          setWaiting(false);
+          toast({
+            variant: "destructive",
+            title: "Invalid credentials",
+            description: response.error,
+          });
+          return;
+        }
+        if (response.success) {
+          setWaiting(false);
+          toast({
+            description: response.success,
+          });
+          getUsers();
+          return;
+        }
       } catch (error: any) {
         console.log(error);
       }
@@ -154,12 +172,12 @@ export default function Users() {
                             </p>
                           </td>
                           <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm flex space-x-2">
-                            <button
-                              className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-700"
+                            <Button
                               onClick={() => handleDelete(user.id)}
+                              className="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-700"
                             >
                               Delete
-                            </button>
+                            </Button>
                           </td>
                         </tr>
                       ))}

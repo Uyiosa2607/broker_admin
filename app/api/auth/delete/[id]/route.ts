@@ -1,51 +1,59 @@
 import { prisma } from "@/auth";
 
-export async function DELETE(request: any, { params }: any) {
-  const { dataId } = await request.json();
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { dataId } = await request.json();
+    const userId = params.id;
 
-  const userId = params.id;
+    // Find the user who is making the request
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+    });
 
-  const user = await prisma.users.findUnique({
-    where: {
-      id: userId,
-    },
-  });
+    // Find the account to delete
+    const accountToDelete = await prisma.users.findUnique({
+      where: { id: dataId },
+    });
 
-  if (user) {
-    if (user.id === dataId || user.admin === true) {
-      try {
-        const accountToDelete = await prisma.users.findUnique({
-          where: {
-            id: dataId,
-          },
-        });
+    // Check if the user is trying to delete their own account
+    if (user?.id === accountToDelete?.id) {
+      // Allow users to delete their own account
+      await prisma.users.delete({
+        where: { id: dataId },
+      });
+      return Response.json({ success: "Account deleted", status: 200 });
+    }
 
-        if (accountToDelete?.admin === true && user.id !== accountToDelete.id)
-          return Response.json({
-            error: "You can't delete an admin account",
-            status: 501,
-          });
-
-        if (user.admin === true || accountToDelete?.id === user.id) {
-          const removedUser = await prisma.users.delete({
-            where: {
-              id: dataId,
-            },
-          });
-
-          if (removedUser)
-            return Response.json({ success: "Account deleted!!", status: 200 });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
+    // Ensure the requesting user is an admin
+    if (!user?.admin) {
       return Response.json({
-        error: "Only Admins are allowed to delete other users",
+        error: "Only admins can delete other users",
         status: 500,
       });
     }
-  }
 
-  return Response.json({ error: "something went wrong", status: 500 });
+    // Prevent deletion of another admin
+    if (accountToDelete?.admin) {
+      return Response.json({
+        error: "Admins cannot delete other admin accounts",
+        status: 403,
+      });
+    }
+
+    // Proceed to delete the user account
+    await prisma.users.delete({
+      where: { id: dataId },
+    });
+
+    return Response.json({ success: "Account deleted", status: 200 });
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    return new Response(
+      JSON.stringify({ error: "Internal server error", status: 500 }),
+      { status: 500 }
+    );
+  }
 }

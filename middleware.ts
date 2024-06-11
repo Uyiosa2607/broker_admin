@@ -12,7 +12,7 @@ export const config = {
     "/dashboard",
     "/users",
     "/profile",
-    // "/api/auth/promote/:path*",
+    "/api/auth/promote/:path*",
     "/api/auth/delete/:path*",
   ],
 };

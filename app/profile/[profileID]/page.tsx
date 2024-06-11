@@ -13,6 +13,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import Link from "next/link";
+import { useToast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
 
 interface User {
@@ -27,6 +28,7 @@ export default function Profile() {
   const params = useParams();
   const profileID: any = params?.profileID;
   const { data: session } = useSession();
+  const { toast } = useToast();
 
   const [profile, setProfile] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -62,8 +64,9 @@ export default function Profile() {
     if (session && session.user && session.user.id) {
       try {
         const request = await axios.put("/api/auth/promote/" + profileID);
-        const response = await request.data;
-        console.log(response);
+        toast({
+          description: "user is now promoted to Admin",
+        });
       } catch (error) {
         console.log(error);
       }

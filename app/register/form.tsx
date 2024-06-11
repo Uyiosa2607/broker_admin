@@ -3,14 +3,19 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useToast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function RegisterForm() {
   const router = useRouter();
+  const { toast } = useToast();
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [pass, setPass] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: any) {
     event.preventDefault();
@@ -18,15 +23,19 @@ export default function RegisterForm() {
     if (pass != password) return;
 
     try {
+      setLoading(true);
       const request = await axios.post("/api/auth/register", {
         name,
         email,
         password,
       });
       const response = await request.data;
-      console.log(response);
       if (response.error) return alert(response.error);
       if (response.status === 201) {
+        setLoading(false);
+        toast({
+          description: response.success,
+        });
         router.push("/login");
       }
     } catch (error) {
@@ -116,9 +125,10 @@ export default function RegisterForm() {
         <Link href="/login">
           <p className="underline">already have an account ?</p>
         </Link>
-        <button className="bg-blue-600 hover:bg-blue-700 rounded-lg px-8 py-2 text-white hover:shadow-xl transition duration-150 uppercase">
+        <Button className="bg-blue-600 hover:bg-blue-700 rounded-lg px-8 py-2 text-white hover:shadow-xl transition duration-150 uppercase">
           Sign Up
-        </button>
+          {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+        </Button>
       </div>
     </form>
   );
