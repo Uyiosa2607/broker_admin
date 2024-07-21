@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Hobby Project",
 };
 
-export default function RootLayout({ children, session }: any) {
+export default function RootLayout({ children }: any) {
   return (
     <html lang="en">
       <body>
