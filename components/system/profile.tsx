@@ -69,6 +69,19 @@ export default function Profile(props: ProfileProps) {
     }
   }
 
+  async function updateStatus(id: string) {
+    try {
+      const { error } = await supabase
+        .from("transactions")
+        .update({ status: "complete" })
+        .eq("id", id);
+      if (error) return console.log(error.message);
+      toast.success("Transaction status updated");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <section className="z-25 bg-white absolute w-full top-0 left-0 h-screen">
       <div className="container mx-auto">
@@ -204,6 +217,7 @@ export default function Profile(props: ProfileProps) {
                       <TableCell>
                         <div className="w-full flex items-center justify-center">
                           <button
+                            onClick={() => updateStatus(transaction.id)}
                             disabled={transaction.status === "complete"}
                             className="text-[11px] py-[8px] uppercase w-fit mx-auto rounded-md bg-green-700 text-[#fafafa] px-[26px] font-semibold"
                           >

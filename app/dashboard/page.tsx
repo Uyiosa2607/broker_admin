@@ -50,7 +50,6 @@ export default function Dashboard() {
   }, []);
 
   async function fecthUser(id: string) {
-    console.log(id);
     try {
       const { data, error } = await supabase
         .from("users")
@@ -70,7 +69,6 @@ export default function Dashboard() {
         .eq("user_id", id);
       if (error) return console.log(error.message);
       setTransactions(data);
-      console.log(transactions);
     } catch (error) {
       console.log(error);
     }
