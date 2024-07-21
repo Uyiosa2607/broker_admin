@@ -1,9 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
-import supabase from "@/lib/client.js";
+/* eslint-disable @next/next/no-img-element */
+import supabase from "@/app/client";
 import { useEffect, useState } from "react";
-import Header from "./header.jsx";
-import Profile from "./profile.jsx";
+import Header from "@/components/system/header";
+import Profile from "@/components/system/profile";
 
 interface Users {
   full_name: string;
@@ -109,7 +109,7 @@ export default function Dashboard() {
                           <td className="border-b border-gray-200">
                             <img
                               className="w-[50px] h-[50px] rounded-full object-cover"
-                              src="/img/avatar.jpg"
+                              src="/avatar.jpg"
                               alt="avatar"
                             />
                           </td>

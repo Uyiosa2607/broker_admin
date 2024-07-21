@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import supabase from "@/lib/client.js";
+import supabase from "@/app/client";
 import { MdOutlineModeEdit } from "react-icons/md";
 import {
   Popover,
@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { IoMdWallet } from "react-icons/io";
-import { Button } from "../ui/button.jsx";
+import { Button } from "../ui/button";
 
 interface ProfileProps {
   user: any;
@@ -78,7 +78,7 @@ export default function Profile(props: ProfileProps) {
               <div>
                 <img
                   className="w-[60px] h-auto object-cover"
-                  src="/img/avatar.png"
+                  src="/avatar.png"
                   alt="avatar"
                 />
               </div>

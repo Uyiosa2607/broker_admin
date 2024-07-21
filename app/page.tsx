@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import supabase from "@/lib/client";
+import supabase from "@/app/client";
 import { useRouter } from "next/navigation";
 
 export default function Home() {

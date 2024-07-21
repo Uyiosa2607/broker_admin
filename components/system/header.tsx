@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { Button } from "../ui/button.jsx";
-import supabase from "@/lib/client.js";
+import { Button } from "../ui/button";
+import supabase from "@/app/client";
 import { useRouter } from "next/navigation.js";
 
 export default function Header() {
@@ -16,7 +16,7 @@ export default function Header() {
     <section>
       <div className="container mx-auto pt-[10px]">
         <div className="flex p-[10px]  items-center justify-between">
-          <img className="w-[30px] h-auto" src="/img/avatar.png" alt="avatar" />
+          <img className="w-[30px] h-auto" src="/avatar.png" alt="avatar" />
           <Button onClick={signOut} variant="destructive">
             Logout
           </Button>
