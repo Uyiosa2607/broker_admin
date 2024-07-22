@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <section>
-      <div className="container mx-auto pt-[10px]">
+      <div className="container px-[10px] mx-auto pt-[10px]">
         <div className="flex p-[10px]  items-center justify-between">
           <img className="w-[30px] h-auto" src="/avatar.png" alt="avatar" />
           <Button onClick={signOut} variant="destructive">

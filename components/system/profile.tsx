@@ -84,22 +84,22 @@ export default function Profile(props: ProfileProps) {
 
   return (
     <section className="z-25 bg-white absolute w-full top-0 left-0 h-screen">
-      <div className="container mx-auto">
+      <div className="container px-[10px] mx-auto">
         <div className="flex flex-col py-[.8rem]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div>
                 <img
-                  className="w-[60px] h-auto object-cover"
+                  className="w-[40px] lg:w-[60px] h-auto object-cover"
                   src="/avatar.png"
                   alt="avatar"
                 />
               </div>
               <div className="capitalize">
-                <p className="text-md font-bold text-[#3a3d45]">
+                <p className="text-sm lg:text-md font-bold text-[#3a3d45]">
                   {user.full_name}
                 </p>
-                <p className="text-sm font-light">{user.email}</p>
+                <p className="text-sm lg:text-md font-light">{user.email}</p>
               </div>
             </div>
             <Button onClick={() => toggle(!edit)} variant="destructive">

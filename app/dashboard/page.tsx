@@ -79,7 +79,7 @@ export default function Dashboard() {
       <Header />
       {edit ? null : (
         <div>
-          <div className="container text-[16px] mx-auto">
+          <div className="container px-[10px] text-[16px] mx-auto">
             <div className="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
               <div className="flex items-center justify-between pb-6">
                 <div>

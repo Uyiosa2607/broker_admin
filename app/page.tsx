@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FormEvent } from "react";
 import supabase from "@/app/client";
 import { useRouter } from "next/navigation";
 
@@ -14,12 +15,16 @@ export default function Home() {
     if (auth) return router.push("/dashboard");
   }, []);
 
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function Login(event: any) {
+  async function Login(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    const formdata = new FormData(event.currentTarget);
+
+    const email: any = formdata.get("email");
+    const password: any = formdata.get("password");
+
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -46,8 +51,7 @@ export default function Home() {
             <input
               className="w-full text-[#111] p-[10px] mt-[10px] border-[1px] border-black"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
               placeholder="Enter Your Email"
               id="email"
               required
@@ -62,8 +66,7 @@ export default function Home() {
               type="password"
               placeholder="Enter Your Password"
               required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
               id="password"
             />
           </div>
