@@ -1,237 +1,186 @@
+"use client";
 /* eslint-disable @next/next/no-img-element */
-import { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import supabase from "@/app/client";
-import { MdOutlineModeEdit } from "react-icons/md";
-import { IoMdWallet } from "react-icons/io";
-import { Button } from "../ui/button";
+import { useEffect, useState } from "react";
+import Header from "@/components/system/header";
+import Profile from "@/components/system/profile";
+import { Skeleton } from "@/components/ui/skeleton";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+interface Users {
+  full_name: string;
+  balance: string;
+  email: string;
+  username: string;
+  id: string;
+  bonus: string;
+}
 
-interface ProfileProps {
-  user: any;
-  toggle: any;
-  transactions: any;
-  edit: boolean;
+interface User {
+  full_name: string;
+  balance: string;
+  id: string;
+  bonus: string;
+  email: string;
 }
 
 interface Transactions {
-  value: string;
-  payment_method: string;
   id: string;
+  payment_method: string;
   status: string;
+  value: string;
 }
 
-export default function Profile(props: ProfileProps) {
-  const { user, toggle, transactions, edit } = props;
-  const [wallet, setWallet] = useState(user.balance);
-  const [bonus, setBonus] = useState(user.bonus);
+export default function Dashboard() {
+  const [users, setUsers] = useState<Users[]>([]);
+  const [user, setUser] = useState<User[]>([]);
+  const [edit, setEdit] = useState<boolean>(false);
+  const [transactions, setTransactions] = useState<Transactions[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  async function updateWallet(id: string) {
+  const getUsers = async function () {
     try {
-      const { error } = await supabase
-        .from("users")
-        .update({ balance: wallet })
-        .eq("id", id);
+      setLoading(true);
+      const { data, error } = await supabase.from("users").select();
       if (error) return console.log(error.message);
-      toast.success("Wallet Balance Updated");
-      return;
+      setUsers(data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  async function updateBonus(id: string) {
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  async function fecthUser(id: string) {
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("users")
-        .update({ bonus: bonus })
+        .select("*")
         .eq("id", id);
       if (error) return console.log(error.message);
-      toast.success("Bonus Balance Updated");
-      return;
+      setUser(data[0]);
+      setEdit(true);
     } catch (error) {
       console.log(error);
     }
-  }
 
-  async function updateStatus(id: string) {
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("transactions")
-        .update({ status: "complete" })
-        .eq("id", id);
+        .select("*")
+        .eq("user_id", id);
       if (error) return console.log(error.message);
-      toast.success("Transaction status updated");
+      setTransactions(data);
     } catch (error) {
       console.log(error);
     }
   }
 
   return (
-    <section className="z-25 bg-white absolute w-full top-0 left-0 h-screen">
-      <div className="container px-[10px] mx-auto">
-        <div className="flex flex-col py-[.8rem]">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div>
-                <img
-                  className="w-[40px] lg:w-[60px] h-auto object-cover"
-                  src="/avatar.png"
-                  alt="avatar"
-                />
-              </div>
-              <div className="capitalize">
-                <p className="text-sm lg:text-md font-bold text-[#3a3d45]">
-                  {user.full_name}
-                </p>
-                <p className="text-sm lg:text-md font-light">{user.email}</p>
-              </div>
-            </div>
-            <Button onClick={() => toggle(!edit)} variant="destructive">
-              close
-            </Button>
-          </div>
-          <div>
-            <div className="flex flex-col my-[20px] py-[1rem] gap-4 lg:flex-row">
-              <Dialog>
-                <div className="w-[90%] bg-[#3a3d45] text-[#fafafa] p-[1rem] border lg:w-[45%] lg:h-[120px] mx-auto">
-                  <div className="flex items-center justify-center gap-1 mx-auto w-[80%]">
-                    <IoMdWallet className="text-[1.5rem]" />
-                    <p className="font-semibold text-xl">
-                      {user.balance}&nbsp;{" "}
-                      <span className="font-medium text-green-400">USD</span>
-                    </p>
-                    <DialogTrigger>
-                      <MdOutlineModeEdit className="ml-[1rem] text-[1.5rem]" />
-                    </DialogTrigger>
-                  </div>
-                  <p className="capitalize text-sm mt-[10px] text-center mx-auto font-[500]">
-                    wallet balance
-                  </p>
+    <section>
+      <Header />
+      {edit ? null : (
+        <div>
+          <div className="container px-[10px] text-[16px] mx-auto">
+            <div className="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
+              <div className="flex items-center justify-between pb-6">
+                <div>
+                  <h2 className="font-semibold text-gray-700">User Accounts</h2>
+                  <span className="text-xs text-gray-500">
+                    View accounts of registered users
+                  </span>
                 </div>
-                <DialogContent>
-                  <DialogTitle>Wallet Balance</DialogTitle>
-                  <DialogDescription>Update Wallet Balance</DialogDescription>
-                  <div className="p-[1rem]">
-                    <input
-                      value={wallet}
-                      onChange={(e) => setWallet(e.target.value)}
-                      id="wallet"
-                      className="w-full text-black font-bold border-[#3a3d45] border-[1px] mt-[10px] p-[10px] text-md"
-                      type="text"
-                    />
-                    <button
-                      onClick={() => updateWallet(user.id)}
-                      className="py-[10px] w-full my-[10px] bg-green-700 text-white rounded-md font-semibold text-md"
-                    >
-                      Update
-                    </button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-              <Dialog>
-                <div className="w-[90%] bg-[#3a3d45] text-[#fafafa] p-[1rem] border-[1px] lg:w-[45%] lg:h-[120px] mx-auto">
-                  <div className="flex items-center justify-center gap-1 mx-auto w-[80%]">
-                    <IoMdWallet className="text-[1.5rem]" />
-                    <p className="font-semibold text-2xl">
-                      {user.bonus}&nbsp;{" "}
-                      <span className="font-medium text-green-400">USD</span>
-                    </p>
-                    <DialogTrigger>
-                      <MdOutlineModeEdit className=" ml-[1rem] text-[1.5rem]" />
-                    </DialogTrigger>
-                  </div>
-                  <p className="capitalize text-sm mt-[10px] text-center font-[500]">
-                    investment balance
-                  </p>
+              </div>
+              <div className="overflow-y-hidden rounded-lg border">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="bg-blue-600 text-left text-xs font-semibold uppercase tracking-widest text-white">
+                        <th className="px-5 py-3"></th>
+                        <th className="px-5 py-3">Full Name</th>
+                        <th className="px-5 py-3">Email</th>
+                        <th className="px-5 py-3">Balance</th>
+                        <th className="px-5 py-3"></th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-gray-500">
+                      {loading
+                        ? Array.from({ length: 5 }).map((_, index) => (
+                            <tr key={index}>
+                              <td className="border-b border-gray-200">
+                                <Skeleton className="w-[40px] h-[40px] rounded-full" />
+                              </td>
+                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                <div className="flex items-center">
+                                  <Skeleton className="w-[100px] h-4 rounded-full" />
+                                </div>
+                              </td>
+                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                <Skeleton className="w-[100px] h-4 rounded-full" />
+                              </td>
+                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                <Skeleton className="w-[60px] h-4 rounded-full" />
+                              </td>
+                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                <Skeleton className="w-[40px] h-5 rounded-full" />
+                              </td>
+                            </tr>
+                          ))
+                        : users.map((user: Users) => (
+                            <tr key={user.id}>
+                              <td className="border-b border-gray-200">
+                                <img
+                                  className="w-[50px] h-[50px] rounded-full object-cover"
+                                  src="/avatar.jpg"
+                                  alt="avatar"
+                                />
+                              </td>
+                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                <div className="flex items-center">
+                                  <p className="capitalize">{user.full_name}</p>
+                                </div>
+                              </td>
+                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                <p className="whitespace-no-wrap">
+                                  {user.email}
+                                </p>
+                              </td>
+                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                <p className="whitespace-no-wrap">
+                                  <b className="font-[500]">$</b>
+                                  {user.balance}
+                                </p>
+                              </td>
+                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                <button
+                                  onClick={() => fecthUser(user.id)}
+                                  className="uppercase font-[600] rounded-md text-white bg-green-700 py-[7px] px-[24px] text-[11px]"
+                                >
+                                  edit
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                    </tbody>
+                  </table>
                 </div>
-                <DialogContent>
-                  <DialogTitle>Bonus Balance</DialogTitle>
-                  <DialogDescription>Update Earnings balance</DialogDescription>
-                  <div className="p-[1rem]">
-                    <input
-                      value={bonus}
-                      onChange={(e) => setBonus(e.target.value)}
-                      id="wallet"
-                      className="w-full text-black font-bold border-[#3a3d45]  border-[1px] mt-[10px] p-[10px] text-md"
-                      type="text"
-                    />
-                    <button
-                      onClick={() => updateBonus(user.id)}
-                      className="py-[10px] w-full my-[10px] bg-green-700 text-white rounded-md font-semibold text-md"
-                    >
-                      Update
-                    </button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-          </div>
-          <div>
-            <div className="overflow-x-scroll">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="uppercase">Amount</TableHead>
-                    <TableHead className="uppercase">Status</TableHead>
-                    <TableHead className="uppercase">Method</TableHead>
-                    <TableHead className="text-right"> </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {transactions.map((transaction: Transactions) => (
-                    <TableRow key={transaction.id}>
-                      <TableCell className="font-medium">
-                        ${transaction.value}
-                      </TableCell>
-                      <TableCell>
-                        <p
-                          className={`p-[2px] text-white text-center ${
-                            transaction.status === "complete"
-                              ? "bg-green-500"
-                              : "bg-red-500"
-                          }`}
-                        >
-                          {transaction.status}
-                        </p>
-                      </TableCell>
-                      <TableCell>{transaction.payment_method}</TableCell>
-                      <TableCell>
-                        <div className="w-full flex items-center justify-center">
-                          <button
-                            onClick={() => updateStatus(transaction.id)}
-                            disabled={transaction.status === "complete"}
-                            className="text-[11px] py-[8px] uppercase w-fit mx-auto rounded-md bg-green-700 text-[#fafafa] px-[26px] font-semibold"
-                          >
-                            Aprove
-                          </button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <ToastContainer />
+      )}
+      {edit
+        ? user && (
+            <Profile
+              user={user}
+              transactions={transactions}
+              toggle={setEdit}
+              edit={edit}
+            />
+          )
+        : null}
     </section>
   );
 }

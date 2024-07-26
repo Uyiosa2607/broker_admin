@@ -107,37 +107,27 @@ export default function Dashboard() {
                     </thead>
                     {loading ? (
                       <tbody className="text-gray-500">
-                        {Array.from(
-                          { length: 5 },
-                          (_, index) => `Item ${index + 1}`
-                        ).map((item) =>
-                          users.map((user: Users) => (
-                            <tr key={user.id}>
-                              <td className="border-b border-gray-200">
-                                <Skeleton className="w-[40px] h-[40px] rounded-full" />
-                              </td>
-                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                                <div className="flex items-center">
-                                  <Skeleton className="w-[100px] h-4 rounded-full" />
-                                </div>
-                              </td>
-                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                                <p className="whitespace-no-wrap">
-                                  <Skeleton className="w-[100px] h-4 rounded-full" />
-                                </p>
-                              </td>
-                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                                <p className="whitespace-no-wrap">
-                                  <b className="font-[500]"></b>
-                                  <Skeleton className="w-[60px] h-4 rounded-full" />
-                                </p>
-                              </td>
-                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                                <Skeleton className="w-[40px] h-5 rounded-full" />
-                              </td>
-                            </tr>
-                          ))
-                        )}
+                        {Array.from({ length: 5 }).map((_, index) => (
+                          <tr key={index}>
+                            <td className="border-b border-gray-200">
+                              <Skeleton className="w-[40px] h-[40px] rounded-full" />
+                            </td>
+                            <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                              <div className="flex items-center">
+                                <Skeleton className="w-[100px] h-4 rounded-full" />
+                              </div>
+                            </td>
+                            <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                              <Skeleton className="w-[100px] h-4 rounded-full" />
+                            </td>
+                            <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                              <Skeleton className="w-[60px] h-4 rounded-full" />
+                            </td>
+                            <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                              <Skeleton className="w-[40px] h-5 rounded-full" />
+                            </td>
+                          </tr>
+                        ))}
                       </tbody>
                     ) : (
                       <tbody className="text-gray-500">
@@ -164,7 +154,6 @@ export default function Dashboard() {
                                 {user.balance}
                               </p>
                             </td>
-
                             <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                               <button
                                 onClick={() => fecthUser(user.id)}
