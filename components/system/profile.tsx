@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { useState } from "react";
+import supabase from "@/app/client";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -10,7 +11,6 @@ import {
 } from "@/components/ui/table";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import supabase from "@/app/client";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { IoMdWallet } from "react-icons/io";
 import { Button } from "../ui/button";
@@ -23,10 +23,11 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 interface ProfileProps {
   user: any;
   toggle: any;
-  transactions: any;
   edit: boolean;
   fetchUser: (id: string) => Promise<void>;
 }
@@ -39,11 +40,32 @@ interface Transactions {
 }
 
 export default function Profile(props: ProfileProps) {
-  const { user, toggle, transactions, edit, fetchUser } = props;
+  const { user, toggle, edit, fetchUser } = props;
   const [wallet, setWallet] = useState(user.balance);
   const [bonus, setBonus] = useState(user.bonus);
   const [deposit, setDeposit] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [method, setMethod] = useState("Bitcoin");
+  const [transaction, setTransaction] = useState<Transactions[]>([]);
+
+  async function getTransaction(id: string) {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("transactions")
+        .select("*")
+        .eq("user_id", id);
+      if (error) return console.log(error.message);
+      setTransaction(data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getTransaction(user.id);
+  }, [user]);
 
   async function updateWallet(id: string) {
     try {
@@ -83,6 +105,7 @@ export default function Profile(props: ProfileProps) {
         .eq("id", id);
       if (error) return toast.error("Something went wrong");
       toast.success("Record removed");
+      getTransaction(user.id);
       return;
     } catch (error) {
       console.log(error);
@@ -97,6 +120,7 @@ export default function Profile(props: ProfileProps) {
         .eq("id", id);
       if (error) return console.log(error.message);
       toast.success("Transaction status updated");
+      getTransaction(user.id);
       return;
     } catch (error) {
       console.log(error);
@@ -113,7 +137,7 @@ export default function Profile(props: ProfileProps) {
         },
       ]);
       if (error) return toast.error("Something went wrong");
-      fetchUser(id);
+      getTransaction(user.id);
       return toast.success("Transaction added succesfully");
     } catch (error) {
       console.error(error);
@@ -263,41 +287,57 @@ export default function Profile(props: ProfileProps) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {transactions.map((transaction: Transactions) => (
+                  {transaction.map((transaction: Transactions) => (
                     <TableRow key={transaction.id}>
                       <TableCell className="font-medium">
                         ${transaction.value}
                       </TableCell>
                       <TableCell>
-                        <p
-                          className={`p-[2px] text-white text-center ${
-                            transaction.status === "complete"
-                              ? "bg-green-500"
-                              : "bg-red-500"
-                          }`}
-                        >
-                          {transaction.status}
-                        </p>
+                        {loading ? (
+                          <Skeleton className="w-[60px] h-4 rounded-full" />
+                        ) : (
+                          <p
+                            className={`p-[2px] text-white text-center ${
+                              transaction.status === "complete"
+                                ? "bg-green-500"
+                                : "bg-red-500"
+                            }`}
+                          >
+                            {transaction.status}
+                          </p>
+                        )}
                       </TableCell>
-                      <TableCell>{transaction.payment_method}</TableCell>
                       <TableCell>
-                        <div className="w-full flex items-center justify-center">
-                          {transaction.status === "pending" ? (
-                            <button
-                              onClick={() => updateStatus(transaction.id)}
-                              className="text-[11px] py-[8px] uppercase w-fit mx-auto rounded-md bg-green-700 text-[#fafafa] px-[26px] font-semibold"
-                            >
-                              Aprove
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() => deleteTransaction(transaction.id)}
-                              className="text-[11px] py-[8px] uppercase w-fit mx-auto rounded-md bg-red-700 text-[#fafafa] px-[26px] font-semibold"
-                            >
-                              Delete
-                            </button>
-                          )}
-                        </div>
+                        {loading ? (
+                          <Skeleton className="w-[60px] h-4 rounded-full" />
+                        ) : (
+                          transaction.payment_method
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {loading ? (
+                          <Skeleton className="w-[40px] h-6 rounded-full" />
+                        ) : (
+                          <div className="w-full flex items-center justify-center">
+                            {transaction.status === "pending" ? (
+                              <button
+                                onClick={() => updateStatus(transaction.id)}
+                                className="text-[11px] py-[8px] uppercase w-fit mx-auto rounded-md bg-green-700 text-[#fafafa] px-[26px] font-semibold"
+                              >
+                                Aprove
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() =>
+                                  deleteTransaction(transaction.id)
+                                }
+                                className="text-[11px] py-[8px] uppercase w-fit mx-auto rounded-md bg-red-700 text-[#fafafa] px-[26px] font-semibold"
+                              >
+                                Delete
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}

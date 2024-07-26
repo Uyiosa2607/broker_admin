@@ -34,7 +34,6 @@ export default function Dashboard() {
   const [users, setUsers] = useState<Users[]>([]);
   const [user, setUser] = useState<User[]>([]);
   const [edit, setEdit] = useState<boolean>(false);
-  const [transactions, setTransactions] = useState<Transactions[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   const getUsers = async function () {
@@ -62,17 +61,6 @@ export default function Dashboard() {
       if (error) return console.log(error.message);
       setUser(data[0]);
       setEdit(true);
-    } catch (error) {
-      console.log(error);
-    }
-
-    try {
-      const { data, error } = await supabase
-        .from("transactions")
-        .select("*")
-        .eq("user_id", id);
-      if (error) return console.log(error.message);
-      setTransactions(data);
     } catch (error) {
       console.log(error);
     }
@@ -175,7 +163,6 @@ export default function Dashboard() {
         ? user && (
             <Profile
               user={user}
-              transactions={transactions}
               toggle={setEdit}
               edit={edit}
               fetchUser={fetchUser}
