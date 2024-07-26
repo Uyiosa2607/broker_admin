@@ -53,7 +53,7 @@ export default function Dashboard() {
     getUsers();
   }, []);
 
-  async function fecthUser(id: string) {
+  async function fetchUser(id: string): Promise<void> {
     try {
       const { data, error } = await supabase
         .from("users")
@@ -155,7 +155,7 @@ export default function Dashboard() {
                               </td>
                               <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                                 <button
-                                  onClick={() => fecthUser(user.id)}
+                                  onClick={() => fetchUser(user.id)}
                                   className="uppercase font-[600] rounded-md text-white bg-green-700 py-[7px] px-[24px] text-[11px]"
                                 >
                                   edit
@@ -178,6 +178,7 @@ export default function Dashboard() {
               transactions={transactions}
               toggle={setEdit}
               edit={edit}
+              fetchUser={fetchUser}
             />
           )
         : null}

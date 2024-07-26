@@ -28,6 +28,7 @@ interface ProfileProps {
   toggle: any;
   transactions: any;
   edit: boolean;
+  fetchUser: (id: string) => Promise<void>;
 }
 
 interface Transactions {
@@ -38,9 +39,11 @@ interface Transactions {
 }
 
 export default function Profile(props: ProfileProps) {
-  const { user, toggle, transactions, edit } = props;
+  const { user, toggle, transactions, edit, fetchUser } = props;
   const [wallet, setWallet] = useState(user.balance);
   const [bonus, setBonus] = useState(user.bonus);
+  const [deposit, setDeposit] = useState("");
+  const [method, setMethod] = useState("Bitcoin");
 
   async function updateWallet(id: string) {
     try {
@@ -50,6 +53,7 @@ export default function Profile(props: ProfileProps) {
         .eq("id", id);
       if (error) return console.log(error.message);
       toast.success("Wallet Balance Updated");
+      fetchUser(id);
       return;
     } catch (error) {
       console.log(error);
@@ -63,7 +67,22 @@ export default function Profile(props: ProfileProps) {
         .update({ bonus: bonus })
         .eq("id", id);
       if (error) return console.log(error.message);
+      fetchUser(id);
       toast.success("Bonus Balance Updated");
+      return;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function deleteTransaction(id: string) {
+    try {
+      const { error } = await supabase
+        .from("transactions")
+        .delete()
+        .eq("id", id);
+      if (error) return toast.error("Something went wrong");
+      toast.success("Record removed");
       return;
     } catch (error) {
       console.log(error);
@@ -78,8 +97,26 @@ export default function Profile(props: ProfileProps) {
         .eq("id", id);
       if (error) return console.log(error.message);
       toast.success("Transaction status updated");
+      return;
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async function addTransaction(id: string) {
+    try {
+      const { error } = await supabase.from("transactions").insert([
+        {
+          user_id: id,
+          value: deposit,
+          payment_method: method,
+        },
+      ]);
+      if (error) return toast.error("Something went wrong");
+      fetchUser(id);
+      return toast.success("Transaction added succesfully");
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -185,6 +222,37 @@ export default function Profile(props: ProfileProps) {
           </div>
           <div>
             <div className="overflow-x-scroll">
+              <Dialog>
+                <div className="flex items-center justify-center mb-6">
+                  <DialogTrigger asChild>
+                    <Button>Add Transaction</Button>
+                  </DialogTrigger>
+                </div>
+
+                <DialogContent>
+                  <div>
+                    <DialogTitle>Deposit</DialogTitle>
+                    <DialogDescription>
+                      Add Deposit transaction
+                    </DialogDescription>
+
+                    <div className="flex flex-col md:flex-row gap-3 items-center ">
+                      <input
+                        className="text-md p-[10px] border border-black"
+                        type="text"
+                        value={deposit}
+                        onChange={(e) => setDeposit(e.target.value)}
+                      />
+                      <Button
+                        className="bg-green-700"
+                        onClick={() => addTransaction(user.id)}
+                      >
+                        Add Transaction
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -214,13 +282,21 @@ export default function Profile(props: ProfileProps) {
                       <TableCell>{transaction.payment_method}</TableCell>
                       <TableCell>
                         <div className="w-full flex items-center justify-center">
-                          <button
-                            onClick={() => updateStatus(transaction.id)}
-                            disabled={transaction.status === "complete"}
-                            className="text-[11px] py-[8px] uppercase w-fit mx-auto rounded-md bg-green-700 text-[#fafafa] px-[26px] font-semibold"
-                          >
-                            Aprove
-                          </button>
+                          {transaction.status === "pending" ? (
+                            <button
+                              onClick={() => updateStatus(transaction.id)}
+                              className="text-[11px] py-[8px] uppercase w-fit mx-auto rounded-md bg-green-700 text-[#fafafa] px-[26px] font-semibold"
+                            >
+                              Aprove
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => deleteTransaction(transaction.id)}
+                              className="text-[11px] py-[8px] uppercase w-fit mx-auto rounded-md bg-red-700 text-[#fafafa] px-[26px] font-semibold"
+                            >
+                              Delete
+                            </button>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>
