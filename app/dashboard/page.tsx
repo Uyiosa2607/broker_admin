@@ -4,6 +4,7 @@ import supabase from "@/app/client";
 import { useEffect, useState } from "react";
 import Header from "@/components/system/header";
 import Profile from "@/components/system/profile";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Users {
   full_name: string;
@@ -32,14 +33,17 @@ interface Transactions {
 export default function Dashboard() {
   const [users, setUsers] = useState<Users[]>([]);
   const [user, setUser] = useState<User[]>([]);
-  const [edit, setEdit] = useState(false);
+  const [edit, setEdit] = useState<boolean>(false);
   const [transactions, setTransactions] = useState<Transactions[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const getUsers = async function () {
     try {
+      setLoading(true);
       const { data, error } = await supabase.from("users").select();
       if (error) return console.log(error.message);
       setUsers(data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -101,42 +105,78 @@ export default function Dashboard() {
                         <th className="px-5 py-3"></th>
                       </tr>
                     </thead>
-                    <tbody className="text-gray-500">
-                      {users.map((user: Users) => (
-                        <tr key={user.id}>
-                          <td className="border-b border-gray-200">
-                            <img
-                              className="w-[50px] h-[50px] rounded-full object-cover"
-                              src="/avatar.jpg"
-                              alt="avatar"
-                            />
-                          </td>
-                          <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                            <div className="flex items-center">
-                              <p className="capitalize">{user.full_name}</p>
-                            </div>
-                          </td>
-                          <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                            <p className="whitespace-no-wrap">{user.email}</p>
-                          </td>
-                          <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                            <p className="whitespace-no-wrap">
-                              <b className="font-[500]">$</b>
-                              {user.balance}
-                            </p>
-                          </td>
+                    {loading ? (
+                      <tbody className="text-gray-500">
+                        {Array.from(
+                          { length: 5 },
+                          (_, index) => `Item ${index + 1}`
+                        ).map((item) =>
+                          users.map((user: Users) => (
+                            <tr key={user.id}>
+                              <td className="border-b border-gray-200">
+                                <Skeleton className="w-[40px] h-[40px] rounded-full" />
+                              </td>
+                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                <div className="flex items-center">
+                                  <Skeleton className="w-[100px] h-4 rounded-full" />
+                                </div>
+                              </td>
+                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                <p className="whitespace-no-wrap">
+                                  <Skeleton className="w-[100px] h-4 rounded-full" />
+                                </p>
+                              </td>
+                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                <p className="whitespace-no-wrap">
+                                  <b className="font-[500]"></b>
+                                  <Skeleton className="w-[60px] h-4 rounded-full" />
+                                </p>
+                              </td>
+                              <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                                <Skeleton className="w-[40px] h-5 rounded-full" />
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    ) : (
+                      <tbody className="text-gray-500">
+                        {users.map((user: Users) => (
+                          <tr key={user.id}>
+                            <td className="border-b border-gray-200">
+                              <img
+                                className="w-[50px] h-[50px] rounded-full object-cover"
+                                src="/avatar.jpg"
+                                alt="avatar"
+                              />
+                            </td>
+                            <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                              <div className="flex items-center">
+                                <p className="capitalize">{user.full_name}</p>
+                              </div>
+                            </td>
+                            <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                              <p className="whitespace-no-wrap">{user.email}</p>
+                            </td>
+                            <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                              <p className="whitespace-no-wrap">
+                                <b className="font-[500]">$</b>
+                                {user.balance}
+                              </p>
+                            </td>
 
-                          <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                            <button
-                              onClick={() => fecthUser(user.id)}
-                              className="uppercase font-[600] rounded-md text-white bg-green-700 py-[7px] px-[24px] text-[11px]"
-                            >
-                              edit
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
+                            <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                              <button
+                                onClick={() => fecthUser(user.id)}
+                                className="uppercase font-[600] rounded-md text-white bg-green-700 py-[7px] px-[24px] text-[11px]"
+                              >
+                                edit
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    )}
                   </table>
                 </div>
               </div>

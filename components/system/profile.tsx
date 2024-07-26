@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -13,13 +12,16 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import supabase from "@/app/client";
 import { MdOutlineModeEdit } from "react-icons/md";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { IoMdWallet } from "react-icons/io";
 import { Button } from "../ui/button";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 interface ProfileProps {
   user: any;
@@ -37,7 +39,6 @@ interface Transactions {
 
 export default function Profile(props: ProfileProps) {
   const { user, toggle, transactions, edit } = props;
-
   const [wallet, setWallet] = useState(user.balance);
   const [bonus, setBonus] = useState(user.bonus);
 
@@ -108,27 +109,26 @@ export default function Profile(props: ProfileProps) {
           </div>
           <div>
             <div className="flex flex-col my-[20px] py-[1rem] gap-4 lg:flex-row">
-              <Popover>
+              <Dialog>
                 <div className="w-[90%] bg-[#3a3d45] text-[#fafafa] p-[1rem] border lg:w-[45%] lg:h-[120px] mx-auto">
                   <div className="flex items-center justify-center gap-1 mx-auto w-[80%]">
-                    <IoMdWallet className="text-[1.5rem] pt-[5px]" />
-                    <p className="font-bold text-xl">
-                      {user.balance}{" "}
-                      <sub className="uppercase font-medium text-sm">usd</sub>
+                    <IoMdWallet className="text-[1.5rem]" />
+                    <p className="font-semibold text-xl">
+                      {user.balance}&nbsp;{" "}
+                      <span className="font-medium text-green-400">USD</span>
                     </p>
-                    <PopoverTrigger>
-                      <MdOutlineModeEdit className="pt-[5px] ml-[2rem] text-[1.5rem]" />
-                    </PopoverTrigger>
+                    <DialogTrigger>
+                      <MdOutlineModeEdit className="ml-[1rem] text-[1.5rem]" />
+                    </DialogTrigger>
                   </div>
                   <p className="capitalize text-sm mt-[10px] text-center mx-auto font-[500]">
                     wallet balance
                   </p>
                 </div>
-                <PopoverContent>
+                <DialogContent>
+                  <DialogTitle>Wallet Balance</DialogTitle>
+                  <DialogDescription>Update Wallet Balance</DialogDescription>
                   <div className="p-[1rem]">
-                    <label className="capitalize" htmlFor="wallet">
-                      Wallet balance
-                    </label>
                     <input
                       value={wallet}
                       onChange={(e) => setWallet(e.target.value)}
@@ -143,29 +143,28 @@ export default function Profile(props: ProfileProps) {
                       Update
                     </button>
                   </div>
-                </PopoverContent>
-              </Popover>
-              <Popover>
+                </DialogContent>
+              </Dialog>
+              <Dialog>
                 <div className="w-[90%] bg-[#3a3d45] text-[#fafafa] p-[1rem] border-[1px] lg:w-[45%] lg:h-[120px] mx-auto">
                   <div className="flex items-center justify-center gap-1 mx-auto w-[80%]">
-                    <IoMdWallet className="text-[1.5rem] pt-[5px]" />
-                    <p className="font-bold text-2xl">
-                      {user.bonus}{" "}
-                      <sub className="uppercase font-medium text-sm">usd</sub>
+                    <IoMdWallet className="text-[1.5rem]" />
+                    <p className="font-semibold text-2xl">
+                      {user.bonus}&nbsp;{" "}
+                      <span className="font-medium text-green-400">USD</span>
                     </p>
-                    <PopoverTrigger>
-                      <MdOutlineModeEdit className="pt-[5px] ml-[2rem] text-[1.5rem]" />
-                    </PopoverTrigger>
+                    <DialogTrigger>
+                      <MdOutlineModeEdit className=" ml-[1rem] text-[1.5rem]" />
+                    </DialogTrigger>
                   </div>
                   <p className="capitalize text-sm mt-[10px] text-center font-[500]">
                     investment balance
                   </p>
                 </div>
-                <PopoverContent>
+                <DialogContent>
+                  <DialogTitle>Bonus Balance</DialogTitle>
+                  <DialogDescription>Update Earnings balance</DialogDescription>
                   <div className="p-[1rem]">
-                    <label className="capitalize" htmlFor="wallet">
-                      investment balance
-                    </label>
                     <input
                       value={bonus}
                       onChange={(e) => setBonus(e.target.value)}
@@ -180,14 +179,13 @@ export default function Profile(props: ProfileProps) {
                       Update
                     </button>
                   </div>
-                </PopoverContent>
-              </Popover>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
           <div>
             <div className="overflow-x-scroll">
               <Table>
-                <TableCaption>Transaction List</TableCaption>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="uppercase">Amount</TableHead>
