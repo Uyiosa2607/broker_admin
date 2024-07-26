@@ -41,7 +41,7 @@ export default function Home() {
   }
 
   return (
-    <main className="text-[16px] text-[#111] h-screen bg-[#fafafa]">
+    <main className="text-[16px] text-[#111]">
       <div className="container px-[10px] mx-auto">
         <form onSubmit={Login} className="mt-[10rem] lg:w-[600px] mx-auto">
           <div className="mb-[20px]">
