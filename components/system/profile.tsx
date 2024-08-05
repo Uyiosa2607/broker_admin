@@ -246,7 +246,7 @@ export default function Profile(props: ProfileProps) {
           </div>
           <div>
             <div className="overflow-x-scroll">
-              <Dialog>
+              {/* <Dialog>
                 <div className="flex items-center justify-center mb-6">
                   <DialogTrigger asChild>
                     <Button>Add Transaction</Button>
@@ -276,7 +276,7 @@ export default function Profile(props: ProfileProps) {
                     </div>
                   </div>
                 </DialogContent>
-              </Dialog>
+              </Dialog> */}
               <Table>
                 <TableHeader>
                   <TableRow>
