@@ -25,6 +25,14 @@ import {
 
 import { Skeleton } from "@/components/ui/skeleton";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 interface ProfileProps {
   user: any;
   toggle: any;
@@ -45,7 +53,8 @@ export default function Profile(props: ProfileProps) {
   const [bonus, setBonus] = useState(user.bonus);
   const [deposit, setDeposit] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [method, setMethod] = useState("Bitcoin");
+  const [method, setMethod] = useState("");
+  const [type, setType] = useState("deposit");
   const [transaction, setTransaction] = useState<Transactions[]>([]);
 
   async function getTransaction(id: string) {
@@ -80,6 +89,14 @@ export default function Profile(props: ProfileProps) {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  function handleMethod(event: any) {
+    setMethod(event.target.value);
+  }
+
+  function handleType(event: any) {
+    setType(event.target.value);
   }
 
   async function updateBonus(id: string) {
@@ -134,6 +151,7 @@ export default function Profile(props: ProfileProps) {
           user_id: id,
           value: deposit,
           payment_method: method,
+          type: type,
         },
       ]);
       if (error) return toast.error("Something went wrong");
@@ -255,12 +273,32 @@ export default function Profile(props: ProfileProps) {
 
                 <DialogContent>
                   <div>
-                    <DialogTitle>Deposit</DialogTitle>
-                    <DialogDescription>
+                    <DialogTitle className="text-center">Deposit</DialogTitle>
+                    <DialogDescription className="my-3 text-center">
                       Add Deposit transaction
                     </DialogDescription>
 
-                    <div className="flex flex-col md:flex-row gap-3 items-center ">
+                    <Select value={method} onValueChange={handleMethod}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Method" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Bitcoin">Bitcoin</SelectItem>
+                        <SelectItem value="USDT">USDT</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <div className="my-3"></div>
+                    <Select value={type} onValueChange={handleType}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="deposit">Deposit</SelectItem>
+                        <SelectItem value="withdrawal">Withdrawal</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <div className="flex flex-col mt-3 md:flex-row gap-3 items-center ">
                       <input
                         className="text-md p-[10px] border border-black"
                         type="text"

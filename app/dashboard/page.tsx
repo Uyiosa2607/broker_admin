@@ -6,35 +6,11 @@ import Header from "@/components/system/header";
 import Profile from "@/components/system/profile";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface Users {
-  full_name: string;
-  balance: string;
-  email: string;
-  username: string;
-  id: string;
-  bonus: string;
-}
-
-interface User {
-  full_name: string;
-  balance: string;
-  id: string;
-  bonus: string;
-  email: string;
-}
-
-interface Transactions {
-  id: string;
-  payment_method: string;
-  status: string;
-  value: string;
-}
-
 export default function Dashboard() {
-  const [users, setUsers] = useState<Users[]>([]);
-  const [user, setUser] = useState<User[]>([]);
-  const [edit, setEdit] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState([]);
+  const [edit, setEdit] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const getUsers = async function () {
     try {
@@ -146,7 +122,7 @@ export default function Dashboard() {
                                   onClick={() => fetchUser(user.id)}
                                   className="uppercase font-[600] rounded-md text-white bg-green-700 py-[7px] px-[24px] text-[11px]"
                                 >
-                                  edit
+                                  Manage
                                 </button>
                               </td>
                             </tr>
