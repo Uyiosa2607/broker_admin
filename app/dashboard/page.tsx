@@ -6,6 +6,13 @@ import Header from "@/components/system/header";
 import Profile from "@/components/system/profile";
 import { Skeleton } from "@/components/ui/skeleton";
 
+interface Users {
+  full_name: string;
+  email: string;
+  balance: string;
+  id: string;
+}
+
 export default function Dashboard() {
   const [users, setUsers] = useState<any[]>([]);
   const [user, setUser] = useState([]);
