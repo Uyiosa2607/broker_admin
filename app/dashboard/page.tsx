@@ -7,7 +7,7 @@ import Profile from "@/components/system/profile";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Dashboard() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [user, setUser] = useState([]);
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(false);

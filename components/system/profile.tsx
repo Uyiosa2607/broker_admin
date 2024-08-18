@@ -91,14 +91,6 @@ export default function Profile(props: ProfileProps) {
     }
   }
 
-  function handleMethod(event: any) {
-    setMethod(event.target.value);
-  }
-
-  function handleType(event: any) {
-    setType(event.target.value);
-  }
-
   async function updateBonus(id: string) {
     try {
       const { error } = await supabase
@@ -278,7 +270,10 @@ export default function Profile(props: ProfileProps) {
                       Add Deposit transaction
                     </DialogDescription>
 
-                    <Select value={method} onValueChange={handleMethod}>
+                    <Select
+                      value={method}
+                      onValueChange={(value) => setMethod(value)}
+                    >
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Method" />
                       </SelectTrigger>
@@ -288,7 +283,10 @@ export default function Profile(props: ProfileProps) {
                       </SelectContent>
                     </Select>
                     <div className="my-3"></div>
-                    <Select value={type} onValueChange={handleType}>
+                    <Select
+                      value={type}
+                      onValueChange={(value) => setType(value)}
+                    >
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Type" />
                       </SelectTrigger>
@@ -318,16 +316,22 @@ export default function Profile(props: ProfileProps) {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="uppercase">Amount</TableHead>
-                    <TableHead className="uppercase">Status</TableHead>
-                    <TableHead className="uppercase">Method</TableHead>
+                    <TableHead className="uppercase text-center">
+                      Amount
+                    </TableHead>
+                    <TableHead className="uppercase text-center">
+                      Status
+                    </TableHead>
+                    <TableHead className="uppercase text-center">
+                      Method
+                    </TableHead>
                     <TableHead className="text-right"> </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {transaction.map((transaction: Transactions) => (
                     <TableRow key={transaction.id}>
-                      <TableCell className="font-medium">
+                      <TableCell className="font-medium text-center">
                         ${transaction.value}
                       </TableCell>
                       <TableCell>
@@ -335,7 +339,7 @@ export default function Profile(props: ProfileProps) {
                           <Skeleton className="w-[60px] h-4 rounded-full" />
                         ) : (
                           <p
-                            className={`p-[2px] text-white text-center ${
+                            className={`p-[2px] text-white text-center mx-auto ${
                               transaction.status === "complete"
                                 ? "bg-green-500"
                                 : "bg-red-500"
@@ -345,7 +349,7 @@ export default function Profile(props: ProfileProps) {
                           </p>
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-center">
                         {loading ? (
                           <Skeleton className="w-[60px] h-4 rounded-full" />
                         ) : (
