@@ -74,11 +74,11 @@ export default function Profile(props: ProfileProps) {
         }
       )
       .subscribe((status) => {
-        if (status === "SUBSCRIPTION_ERROR") {
-          setError("Subscription error");
+        if (status === "CHANNEL_ERROR") {
           console.error("Error in subscription");
         }
       });
+
     return () => {
       supabase.removeChannel(subscription);
     };

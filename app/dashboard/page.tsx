@@ -25,10 +25,9 @@ interface User {
 
 export default function Dashboard() {
   const [users, setUsers] = useState<Users[]>([]);
-  const [user, setUser] = useState<User | null>(null); // Change user to single object
+  const [user, setUser] = useState<User | null>(null);
   const [edit, setEdit] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null); // Handle potential errors
 
   const getUsers = async function () {
     try {
@@ -55,11 +54,11 @@ export default function Dashboard() {
         }
       )
       .subscribe((status) => {
-        if (status === "SUBSCRIPTION_ERROR") {
-          setError("Subscription error");
+        if (status === "CHANNEL_ERROR") {
           console.error("Error in subscription");
         }
       });
+
     return () => {
       supabase.removeChannel(subscription);
     };
