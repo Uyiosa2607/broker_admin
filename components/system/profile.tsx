@@ -36,8 +36,7 @@ import {
 interface ProfileProps {
   user: any;
   toggle: any;
-  edit: boolean;
-  fetchUser: (id: string) => Promise<void>;
+  fetchUser: Function;
 }
 
 interface Transactions {
@@ -48,7 +47,7 @@ interface Transactions {
 }
 
 export default function Profile(props: ProfileProps) {
-  const { user, toggle, edit, fetchUser } = props;
+  const { user, toggle, fetchUser } = props;
   const [wallet, setWallet] = useState(user.balance);
   const [bonus, setBonus] = useState(user.bonus);
   const [deposit, setDeposit] = useState("");
@@ -74,7 +73,25 @@ export default function Profile(props: ProfileProps) {
 
   useEffect(() => {
     getTransaction(user.id);
-  }, [user]);
+    const subscription = supabase
+      .channel("custom-all-channel")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "users" },
+        (payload) => {
+          fetchUser(user.id);
+        }
+      )
+      .subscribe((status) => {
+        if (status === "CHANNEL_ERROR") {
+          console.error("Error in subscription");
+        }
+      });
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
+  }, []);
 
   async function updateWallet(id: string) {
     try {
@@ -84,7 +101,6 @@ export default function Profile(props: ProfileProps) {
         .eq("id", id);
       if (error) return console.log(error.message);
       toast.success("Wallet Balance Updated");
-      fetchUser(id);
       return;
     } catch (error) {
       console.log(error);
@@ -98,7 +114,6 @@ export default function Profile(props: ProfileProps) {
         .update({ bonus: bonus })
         .eq("id", id);
       if (error) return console.log(error.message);
-      fetchUser(id);
       toast.success("Bonus Balance Updated");
       return;
     } catch (error) {
@@ -174,7 +189,7 @@ export default function Profile(props: ProfileProps) {
                 <p className="text-sm lg:text-md font-light">{user.email}</p>
               </div>
             </div>
-            <Button onClick={() => toggle(!edit)} variant="destructive">
+            <Button onClick={() => toggle()} variant="destructive">
               close
             </Button>
           </div>

@@ -11,13 +11,15 @@ interface Users {
   email: string;
   balance: string;
   id: string;
+  bonus: string;
+  email: string;
 }
 
 export default function Dashboard() {
-  const [users, setUsers] = useState<any[]>([]);
-  const [user, setUser] = useState([]);
-  const [edit, setEdit] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState<Users[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [edit, setEdit] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const getUsers = async function () {
     try {
@@ -33,6 +35,25 @@ export default function Dashboard() {
 
   useEffect(() => {
     getUsers();
+
+    const subscription = supabase
+      .channel("custom-all-channel")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "users" },
+        (payload) => {
+          getUsers();
+        }
+      )
+      .subscribe((status) => {
+        if (status === "CHANNEL_ERROR") {
+          console.error("Error in subscription");
+        }
+      });
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
 
   async function fetchUser(id: string): Promise<void> {
@@ -52,7 +73,7 @@ export default function Dashboard() {
   return (
     <section>
       <Header />
-      {edit ? null : (
+      {!edit ? (
         <div>
           <div className="container px-[10px] text-[16px] mx-auto">
             <div className="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
@@ -126,7 +147,10 @@ export default function Dashboard() {
                               </td>
                               <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                                 <button
-                                  onClick={() => fetchUser(user.id)}
+                                  onClick={() => {
+                                    setUser(user);
+                                    setEdit(!edit);
+                                  }}
                                   className="uppercase font-[600] rounded-md text-white bg-green-700 py-[7px] px-[24px] text-[11px]"
                                 >
                                   Manage
@@ -141,17 +165,13 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      )}
-      {edit
-        ? user && (
-            <Profile
-              user={user}
-              toggle={setEdit}
-              edit={edit}
-              fetchUser={fetchUser}
-            />
-          )
-        : null}
+      ) : user ? (
+        <Profile
+          user={user}
+          fetchUser={fetchUser}
+          toggle={() => setEdit(!edit)}
+        />
+      ) : null}
     </section>
   );
 }
