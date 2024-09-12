@@ -12,12 +12,11 @@ interface Users {
   balance: string;
   id: string;
   bonus: string;
-  email: string;
 }
 
 export default function Dashboard() {
   const [users, setUsers] = useState<Users[]>([]);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<Users | null>(null);
   const [edit, setEdit] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
