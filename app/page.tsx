@@ -12,8 +12,8 @@ export default function Home() {
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (session) => {
-        if (!session) {
+      (event, session) => {
+        if (!session?.user) {
           setAuth(false);
         } else {
           setAuth(true);
