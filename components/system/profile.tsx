@@ -9,12 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { IoMdWallet } from "react-icons/io";
 import { Button } from "../ui/button";
-
+import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
   DialogContent,
@@ -55,6 +53,8 @@ export default function Profile(props: ProfileProps) {
   const [method, setMethod] = useState("");
   const [type, setType] = useState("deposit");
   const [transaction, setTransaction] = useState<Transactions[]>([]);
+
+  const { toast } = useToast();
 
   async function getTransaction(id: string) {
     try {
@@ -100,7 +100,10 @@ export default function Profile(props: ProfileProps) {
         .update({ balance: wallet })
         .eq("id", id);
       if (error) return console.log(error.message);
-      toast.success("Wallet Balance Updated");
+      toast({
+        title: "Completed",
+        description: "Balance Updated",
+      });
       return;
     } catch (error) {
       console.log(error);
@@ -114,7 +117,11 @@ export default function Profile(props: ProfileProps) {
         .update({ bonus: bonus })
         .eq("id", id);
       if (error) return console.log(error.message);
-      toast.success("Bonus Balance Updated");
+      toast({
+        title: "Completed",
+        description: "Bonus Balance Updated",
+      });
+      return;
       return;
     } catch (error) {
       console.log(error);
@@ -127,8 +134,16 @@ export default function Profile(props: ProfileProps) {
         .from("transactions")
         .delete()
         .eq("id", id);
-      if (error) return toast.error("Something went wrong");
-      toast.success("Record removed");
+      if (error)
+        return toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Something went wrong",
+        });
+      toast({
+        title: "Completed",
+        description: "Transaction deleted",
+      });
       getTransaction(user.id);
       return;
     } catch (error) {
@@ -143,7 +158,10 @@ export default function Profile(props: ProfileProps) {
         .update({ status: "complete" })
         .eq("id", id);
       if (error) return console.log(error.message);
-      toast.success("Transaction status updated");
+      toast({
+        title: "Completed",
+        description: "Transaction status updated",
+      });
       getTransaction(user.id);
       return;
     } catch (error) {
@@ -404,7 +422,6 @@ export default function Profile(props: ProfileProps) {
           </div>
         </div>
       </div>
-      <ToastContainer />
     </section>
   );
 }
