@@ -23,13 +23,13 @@ import {
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 
 interface ProfileProps {
   user: any;
@@ -169,31 +169,31 @@ export default function Profile(props: ProfileProps) {
     }
   }
 
-  async function addTransaction(id: string) {
-    try {
-      const { error } = await supabase.from("transactions").insert([
-        {
-          user_id: id,
-          value: deposit,
-          payment_method: method,
-          type: type,
-        },
-      ]);
-      if (error)
-        return toast({
-          variant: "destructive",
-          title: "error",
-          description: "Something went wrong please try again",
-        });
-      getTransaction(user.id);
-      return toast({
-        title: "Completed",
-        description: "Transaction added",
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  // async function addTransaction(id: string) {
+  //   try {
+  //     const { error } = await supabase.from("transactions").insert([
+  //       {
+  //         user_id: id,
+  //         value: deposit,
+  //         payment_method: method,
+  //         type: type,
+  //       },
+  //     ]);
+  //     if (error)
+  //       return toast({
+  //         variant: "destructive",
+  //         title: "error",
+  //         description: "Something went wrong please try again",
+  //       });
+  //     getTransaction(user.id);
+  //     return toast({
+  //       title: "Completed",
+  //       description: "Transaction added",
+  //     });
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
   return (
     <section className="z-25 bg-white absolute w-full top-0 left-0 h-screen">

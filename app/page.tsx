@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Loader2 } from "lucide-react";
 import supabase from "@/app/client";
 import Dashboard from "@/components/system/Dashboard";
 import Login from "@/components/system/Login";
+import { Loader2 } from "lucide-react";
 
 export default function Home() {
   const [auth, setAuth] = useState<boolean>(false);
@@ -12,7 +12,7 @@ export default function Home() {
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      (session) => {
         if (!session) {
           setAuth(false);
         } else {
