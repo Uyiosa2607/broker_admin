@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FormEvent } from "react";
 import supabase from "@/app/client";
 import { Input } from "../ui/input";
@@ -6,9 +6,12 @@ import { Label } from "../ui/label";
 import { Card, CardContent, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
+
+  const { toast } = useToast();
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -22,6 +25,15 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
+    });
+    if (error?.code === "invalid_credentials")
+      toast({
+        variant: "destructive",
+        title: "Wrong email or password",
+        description: "Please check login credentials and try again",
+      });
+    toast({
+      description: "Login Approved",
     });
     setLoading(false);
   }

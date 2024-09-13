@@ -1,11 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 import supabase from "@/app/client";
 import { Button } from "../ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Header() {
+  const { toast } = useToast();
+
   async function signOut() {
-    const logOut = await supabase.auth.signOut();
-    console.log(logOut);
+    await supabase.auth.signOut();
+    toast({
+      description: "User logged out!!",
+    });
   }
 
   return (
