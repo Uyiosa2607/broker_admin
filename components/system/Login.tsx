@@ -28,18 +28,21 @@ export default function Login() {
 
   return (
     <main className="text-[16px] text-[#111]">
-      <div className="container px-[10px] mx-auto">
-        <form onSubmit={handleLogin} className="mt-[10rem] mx-auto">
-          <CardTitle className="text-center mb-4 font-semibold Capitalize">
-            Welcome back
-          </CardTitle>
-          <Card className="md:w-[600px] py-5 pt-6 px-3 mx-auto">
-            <CardContent>
-              <div className="mb-[20px] flex flex-col gap-1.5">
+      <div className="container px-1  mx-auto">
+        <form
+          onSubmit={handleLogin}
+          className="mt-[4rem] md:mt-[10rem] mx-auto"
+        >
+          <Card className="md:w-[600px] py-5 md:pt-6 px-2 md:px-4 mx-auto">
+            <CardTitle className="text-center text-lg mb-4 font-semibold uppercase">
+              Welcome back
+            </CardTitle>
+            <CardContent className="p-0">
+              <div className="mb-4 flex flex-col gap-1.5">
                 <Label>Email</Label>
                 <Input type="email" required name="email" id="email" />
               </div>
-              <div className="mb-[50px] flex flex-col gap-1.5">
+              <div className="mb-5 flex flex-col gap-1.5">
                 <Label>Password</Label>
                 <Input type="password" name="password" id="password" required />
               </div>
