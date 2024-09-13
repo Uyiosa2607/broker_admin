@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import Header from "@/components/system/header";
 import Profile from "@/components/system/profile";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useToast } from "@/hooks/use-toast";
 
 interface Users {
   full_name: string;
@@ -20,8 +19,6 @@ export default function Dashboard() {
   const [user, setUser] = useState<Users | null>(null);
   const [edit, setEdit] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-
-  const { toast } = useToast();
 
   const getUsers = async function () {
     try {

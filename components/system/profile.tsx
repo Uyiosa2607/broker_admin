@@ -197,32 +197,35 @@ export default function Profile(props: ProfileProps) {
 
   return (
     <section className="z-25 bg-white absolute w-full top-0 left-0 h-screen">
+      <div className="flex sticky z-[200] top-0 left-0 w-full p-3 bg-black text-white items-center justify-between">
+        <div className="flex  items-center gap-3">
+          <div>
+            <img
+              className="w-[40px] lg:w-[40px] h-auto object-cover"
+              src="/avatar.png"
+              alt="avatar"
+            />
+          </div>
+          <div className="capitalize">
+            <p className="text-sm lg:text-md font-bold">{user.full_name}</p>
+            <p className="text-sm lg:text-md font-light">{user.email}</p>
+          </div>
+        </div>
+        <Button
+          size="sm"
+          className="text-xs"
+          onClick={() => toggle()}
+          variant="destructive"
+        >
+          close
+        </Button>
+      </div>
       <div className="container px-[10px] mx-auto">
         <div className="flex flex-col py-[.8rem]">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div>
-                <img
-                  className="w-[40px] lg:w-[60px] h-auto object-cover"
-                  src="/avatar.png"
-                  alt="avatar"
-                />
-              </div>
-              <div className="capitalize">
-                <p className="text-sm lg:text-md font-bold text-[#3a3d45]">
-                  {user.full_name}
-                </p>
-                <p className="text-sm lg:text-md font-light">{user.email}</p>
-              </div>
-            </div>
-            <Button onClick={() => toggle()} variant="destructive">
-              close
-            </Button>
-          </div>
           <div>
-            <div className="flex flex-col my-[20px] py-[1rem] gap-4 lg:flex-row">
+            <div className="flex flex-col  py-[1rem] gap-4 lg:flex-row">
               <Dialog>
-                <div className="w-[90%] bg-[#3a3d45] text-[#fafafa] p-[1rem] border lg:w-[45%] lg:h-[120px] mx-auto">
+                <div className="w-[90%] bg-zinc-900 flex items-center justify-center flex-col text-[#fafafa] p-[1rem] border lg:w-[45%] lg:h-[120px] mx-auto">
                   <div className="flex items-center justify-center gap-1 mx-auto w-[80%]">
                     <IoMdWallet className="text-[1.5rem]" />
                     <p className="font-semibold text-xl">
@@ -258,9 +261,9 @@ export default function Profile(props: ProfileProps) {
                 </DialogContent>
               </Dialog>
               <Dialog>
-                <div className="w-[90%] bg-[#3a3d45] text-[#fafafa] p-[1rem] border-[1px] lg:w-[45%] lg:h-[120px] mx-auto">
+                <div className="w-[90%] bg-zinc-900 flex flex-col items-center justify-center text-[#fafafa] p-[1rem] border-[1px] lg:w-[45%] lg:h-[120px] mx-auto">
                   <div className="flex items-center justify-center gap-1 mx-auto w-[80%]">
-                    <IoMdWallet className="text-[1.5rem]" />
+                    <IoMdWallet className="text-2xl" />
                     <p className="font-semibold text-2xl">
                       {user.bonus}&nbsp;{" "}
                       <span className="font-medium text-green-400">USD</span>

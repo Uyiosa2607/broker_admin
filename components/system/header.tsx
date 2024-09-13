@@ -1,23 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
-import { Button } from "../ui/button";
 import supabase from "@/app/client";
-import { useRouter } from "next/navigation.js";
+import { Button } from "../ui/button";
 
 export default function Header() {
-  const router = useRouter();
-
   async function signOut() {
-    const { error } = await supabase.auth.signOut();
-    localStorage.removeItem("auth");
-    router.push("/");
+    const logOut = await supabase.auth.signOut();
+    console.log(logOut);
   }
 
   return (
-    <section>
-      <div className="container px-[10px] mx-auto pt-[10px]">
-        <div className="flex p-[10px]  items-center justify-between">
-          <img className="w-[30px] h-auto" src="/avatar.png" alt="avatar" />
-          <Button onClick={signOut} variant="destructive">
+    <section className="bg-black text-white">
+      <div className="container p-3 mx-auto">
+        <div className="flex items-center justify-between">
+          <h3>Dashboard</h3>
+          <Button
+            className="text-xs"
+            size="sm"
+            onClick={signOut}
+            variant="destructive"
+          >
             Logout
           </Button>
         </div>
