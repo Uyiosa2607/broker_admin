@@ -8,12 +8,12 @@ import { Loader2 } from "lucide-react";
 
 export default function Home() {
   const [auth, setAuth] = useState<boolean>(false);
-  const [authLoading, setAuthLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(false);
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (session) => {
-        if (!session) {
+      (event, session) => {
+        if (!session?.user) {
           setAuth(false);
         } else {
           setAuth(true);
@@ -30,7 +30,7 @@ export default function Home() {
   if (authLoading) {
     return (
       <main className="h-screen w-screen flex items-center justify-center">
-        <Loader2 className="w-16 h-16 animate-spin" />
+        <Loader2 className="w-16 h-16 mr-1 animate-spin" />
       </main>
     );
   }
