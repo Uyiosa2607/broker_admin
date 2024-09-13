@@ -179,9 +179,17 @@ export default function Profile(props: ProfileProps) {
           type: type,
         },
       ]);
-      if (error) return toast.error("Something went wrong");
+      if (error)
+        return toast({
+          variant: "destructive",
+          title: "error",
+          description: "Something went wrong please try again",
+        });
       getTransaction(user.id);
-      return toast.success("Transaction added succesfully");
+      return toast({
+        title: "Completed",
+        description: "Balance Updated",
+      });
     } catch (error) {
       console.error(error);
     }
