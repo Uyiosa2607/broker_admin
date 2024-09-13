@@ -188,7 +188,7 @@ export default function Profile(props: ProfileProps) {
       getTransaction(user.id);
       return toast({
         title: "Completed",
-        description: "Balance Updated",
+        description: "Transaction added",
       });
     } catch (error) {
       console.error(error);
