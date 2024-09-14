@@ -26,6 +26,7 @@ export default function Login() {
       email: email,
       password: password,
     });
+
     if (error) {
       toast({
         variant: "destructive",
@@ -40,7 +41,7 @@ export default function Login() {
     toast({
       description: "Login Approved",
     });
-    setLoading(false);
+    return setLoading(false);
   }
 
   return (
