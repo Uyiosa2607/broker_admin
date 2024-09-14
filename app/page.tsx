@@ -8,17 +8,19 @@ import { Loader2 } from "lucide-react";
 
 export default function Home() {
   const [auth, setAuth] = useState<boolean>(false);
-  const [authLoading, setAuthLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
+    setAuthLoading(true);
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (!session?.user) {
           setAuth(false);
         } else {
           setAuth(true);
+          setAuthLoading(false);
+          return;
         }
-        setAuthLoading(false);
       }
     );
 
