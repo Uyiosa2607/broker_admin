@@ -5,6 +5,7 @@ import supabase from "@/app/client";
 import Dashboard from "@/components/system/Dashboard";
 import Login from "@/components/system/Login";
 import { Loader2 } from "lucide-react";
+import { error } from "console";
 
 export default function Home() {
   const [auth, setAuth] = useState<boolean>(false);
@@ -16,10 +17,10 @@ export default function Home() {
       (event, session) => {
         if (!session?.user) {
           setAuth(false);
+          setAuthLoading(false);
         } else {
           setAuth(true);
           setAuthLoading(false);
-          return;
         }
       }
     );
