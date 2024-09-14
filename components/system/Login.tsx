@@ -22,16 +22,21 @@ export default function Login() {
     const password: any = formdata.get("password");
 
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error }: any = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
-    if (error?.code === "invalid_credentials")
+    if (error) {
       toast({
         variant: "destructive",
-        title: "Wrong email or password",
-        description: "Please check login credentials and try again",
+        title: "Unable to login",
+        description: error?.messgae,
       });
+
+      setLoading(false);
+      return;
+    }
+
     toast({
       description: "Login Approved",
     });
