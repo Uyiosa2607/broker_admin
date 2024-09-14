@@ -17,8 +17,9 @@ export default function Home() {
           setAuth(false);
         } else {
           setAuth(true);
+          setAuthLoading(false);
+          return;
         }
-        setAuthLoading(false);
       }
     );
 
